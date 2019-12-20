@@ -1,0 +1,50 @@
+#!/bin/sh
+#
+#   Checkstyle execution script
+#   This script checks and only runs for java 8.  In addition, the scrip
+#   assumes that the checkstyle-8.27-all.jar is in the same directory.
+#
+#   Usage: checkstyle.sh -c <Checkstyle-compliant XML configuration file> <directory to evaluate>
+#   Configured Errors: 
+#   * java in path and JAVA_HOME java is not version 1.8
+#   * java command is not executable
+#   * check-style violations
+#
+
+isJavaVersionValid () {
+    JAVAVERSION=`$JAVACMD -version 2>&1 >/dev/null | grep 'java version' | awk '{ print $3 }'`
+    JAVAVERSION=`echo ${JAVAVERSION//\"/}`
+    case $JAVAVERSION in
+        1.8*)
+        exitValue="0";;
+       *)
+        exitValue="1";;
+    esac
+    echo "$exitValue"
+}
+
+SCRIPTDIR=$(cd `dirname $0`;pwd)
+# Check for java for runtime only
+# use java in path
+JAVACMD=`which java`
+if [ "$?" -eq "0" ]; then
+	exitValue=$(isJavaVersionValid $JAVACMD)
+fi
+if [ "$exitValue" -ne "0" ]; then
+    # version not valid, so check JAVA_HOME 
+    if [ ! -z $JAVA_HOME ]; then
+        JAVACMD="$JAVA_HOME/bin/java"
+        if [ -e $JAVACMD ]; then
+            exitValue=$(isJavaVersionValid $JAVACMD)
+            if [ "$exitValue" != "0" ]; then
+                exit 1;
+            fi
+        fi
+    else
+        echo "ERROR JAVA_HOME not defined"
+        exit 1
+    fi
+fi
+# run checkstyle
+$JAVACMD -jar checkstyle-8.27-all.jar $@
+

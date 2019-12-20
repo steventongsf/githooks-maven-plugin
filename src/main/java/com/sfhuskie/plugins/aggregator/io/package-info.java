@@ -1,0 +1,1 @@
+package com.sfhuskie.plugins.aggregator.io;
