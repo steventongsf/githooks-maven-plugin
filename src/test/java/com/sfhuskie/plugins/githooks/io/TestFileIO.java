@@ -32,7 +32,7 @@ import com.sfhuskie.plugins.githooks.MojoSettings;
  * 
  */
 public class TestFileIO {
-    MojoSettings s = new MojoSettings(MojoSettings.userDir.getAbsolutePath());
+    MojoSettings s = new MojoSettings();
     
     @Test 
     public void readDeployedPreCommitFile() throws Exception {
