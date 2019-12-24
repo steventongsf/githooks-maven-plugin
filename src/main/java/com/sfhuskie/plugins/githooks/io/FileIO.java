@@ -43,12 +43,4 @@ public class FileIO {
     public static void writeLines(File file, List<String> lines) throws IOException {
         FileUtils.writeLines(file, encoding, lines);
     }
-    public static void makeDirectoryFilesExecutable(File directory) {
-        List<File> entries = Arrays.asList(directory.listFiles());
-        for (File entry: entries) {
-            if (entry.isFile()) {
-                entry.setExecutable(true);
-            }
-        }
-    }
 }
