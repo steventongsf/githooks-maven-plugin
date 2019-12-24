@@ -50,19 +50,4 @@ public class TestFileIO {
         List<String> lines2 = FileIO.getLines(file);
         assertEquals(lines,lines2);
     }
-    @Test
-    public void isFileExecutable() throws IOException {
-        File file = new File(s.userDir + "/target/exectest.sh");
-        if (file.exists()) {
-            FileUtils.forceDelete(file);
-        }
-        List<String> lines = new ArrayList<String>();
-        lines.add("#!/bin/sh");
-        file = new File(s.userDir + "/target/exectest.sh");
-        FileIO.writeLines(file, lines);
-        file = new File(s.userDir + "/target");
-        FileIO.makeDirectoryFilesExecutable(file);
-        file = new File(s.userDir + "/target/exectest.sh");
-        assertTrue(file.canExecute());
-    }
 }
