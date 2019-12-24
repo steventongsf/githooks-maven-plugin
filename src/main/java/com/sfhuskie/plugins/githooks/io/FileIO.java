@@ -43,4 +43,7 @@ public class FileIO {
     public static void writeLines(File file, List<String> lines) throws IOException {
         FileUtils.writeLines(file, encoding, lines);
     }
+    public static boolean appendToHookFile(File srcFile, File targetFile) {
+        throw new RuntimeException("Not implemented yet.");
+    }
 }

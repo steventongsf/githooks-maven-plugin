@@ -33,6 +33,7 @@ import com.sfhuskie.plugins.githooks.MojoSettings;
  */
 public class TestFileIO {
     MojoSettings s = new MojoSettings();
+    File targetDir = new File(MojoSettings.userDir+"/target"); 
     
     @Test 
     public void readDeployedPreCommitFile() throws Exception {
@@ -49,5 +50,14 @@ public class TestFileIO {
         FileIO.writeLines(file, lines);
         List<String> lines2 = FileIO.getLines(file);
         assertEquals(lines,lines2);
+    }
+    @Test 
+    public void appendToFile() throws IOException {
+        
+        File srcFile = new File(this.s.getHooksSourceDirectory()+"/pre-commit");
+        File targetFile = new File(targetDir.getCanonicalPath()+"/pre-commit");
+        FileUtils.forceDelete(targetFile);
+        FileIO.appendToHookFile(srcFile, targetFile);
+        
     }
 }
