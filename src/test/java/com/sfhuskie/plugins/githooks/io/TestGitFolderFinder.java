@@ -46,27 +46,28 @@ import com.sfhuskie.plugins.githooks.MojoSettings;
 
 public class TestGitFolderFinder {
     File targetDir = new File(MojoSettings.userDir+"/target");
-    @Before
-    public void setUp() throws IOException {
-    }
     @Test
     public void findGitTestFolderCurrentDir() throws IOException {
         File projectDir = new File(targetDir.getAbsolutePath()+"/folderA/folderB/folderC/");
+        FileUtils.forceMkdir(projectDir);
         GitFolderFinder gff = new GitFolderFinder(projectDir);
         for (String folder: gff.subFolderNames.keySet()) { 
-            File gitDir = new File(targetDir.getAbsolutePath()+"/folderA/folderB/folderC/.git.bak"+folder);
+            File dir = new File(targetDir.getAbsolutePath()+"/folderA/folderB/folderC/.git.bak/"+folder);
+            FileUtils.forceMkdir(dir);
         }
         gff.overrideSearchFolder(".git.bak");
-        assertEquals(new File(targetDir.getCanonicalFile()+"/.git.bak"),gff.find());
+        assertEquals(new File(targetDir.getCanonicalFile()+"/folderA/folderB/folderC/.git.bak"),gff.find());
     }
     @Test
     public void findGitTestFolderParentDir() throws IOException {
-        File projectDir = new File(targetDir.getAbsolutePath()+"/folderA/folderB/folderC/folderD/");
+        File projectDir = new File(targetDir.getAbsolutePath()+"/folderX/folderY/folderZ/");
+        FileUtils.forceMkdir(projectDir);
         GitFolderFinder gff = new GitFolderFinder(projectDir);
         for (String folder: gff.subFolderNames.keySet()) { 
-            File gitDir = new File(targetDir.getAbsolutePath()+"/folderA/folderB/.git.bak"+folder);
+            File dir = new File(targetDir.getAbsolutePath()+"/folderX/.git.bak/"+folder);
+            FileUtils.forceMkdir(dir);
         }
         gff.overrideSearchFolder(".git.bak");
-        assertEquals(new File(targetDir.getCanonicalFile()+"/folderA/folderB/.git.bak"),gff.find());
+        assertEquals(new File(targetDir.getCanonicalFile()+"/folderX/.git.bak"),gff.find());
     }
 }
