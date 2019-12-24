@@ -39,6 +39,15 @@ public class GitFolderFinder {
         this.subFolderNames.put("info",false);
         this.subFolderNames.put("logs",false);
     }
+    
+    public Map<String, Boolean> getSubFolderNames() {
+        return subFolderNames;
+    }
+
+    public void setSubFolderNames(Map<String, Boolean> subFolderNames) {
+        this.subFolderNames = subFolderNames;
+    }
+
     public void overrideSearchFolder(String s) {
         this.searchFolder = s;
     }
@@ -87,7 +96,7 @@ public class GitFolderFinder {
                 return getGitPath(dir);
             }
         }
-        throw new RuntimeException("");
+        throw new RuntimeException("Unable to find git directory in any parent folder.");
     }
     static void console(String m) {
         System.out.println(m);

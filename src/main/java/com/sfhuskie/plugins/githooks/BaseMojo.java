@@ -31,7 +31,11 @@ abstract class BaseMojo extends AbstractMojo {
     @Parameter(defaultValue = "${basedir}", property = "root.directory", required = true)
     protected File rootDirectory;
 
+    @Parameter(defaultValue = "${project.build.directory}", property = "target.directory", required = true)
+    protected File targetDirectory;
+    
    public void execute() throws MojoExecutionException, MojoFailureException {
        mavenLog.info("rootDirectory: "+rootDirectory);
+       mavenLog.info("targetDirectory: "+targetDirectory);
    }
 }
