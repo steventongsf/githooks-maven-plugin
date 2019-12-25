@@ -30,6 +30,10 @@ public class GitHooksDeployer {
     File gitDir = null;
     File hooksDir = null;
     String gitMetadataFolder = ".git";
+    /**
+     * @param rootDir
+     * @throws IOException
+     */
     public GitHooksDeployer(String rootDir) throws IOException {
         this.settings = new MojoSettings();
         gitDir = new File(rootDir+"/"+this.gitMetadataFolder);
@@ -42,10 +46,16 @@ public class GitHooksDeployer {
         gitDir =  gff.find();
         hooksDir = new File(gitDir.getCanonicalPath()+this.settings.hooksRelativeDir);
     }
+    /**
+     * @param s
+     */
     public void overrideGitMetadataFolder(String s) {
         this.gitMetadataFolder = s;
     }
 
+    /**
+     * @throws IOException
+     */
     public void deploy() throws IOException {
         File srcDir = this.settings.getHooksSourceDirectory();
         List<File> sourceFiles = Arrays.asList(srcDir.listFiles());
@@ -53,16 +63,20 @@ public class GitHooksDeployer {
             this.processHookFile(srcFile);
         }
     }
-    public void processHookFile(File file) throws IOException {
-        File targetFile = new File(this.hooksDir.getCanonicalPath()+"/"+file.getName());
+    /**
+     * @param srcFile
+     * @throws IOException
+     */
+    public void processHookFile(File srcFile) throws IOException {
+        File targetFile = new File(this.hooksDir.getCanonicalPath()+"/"+srcFile.getName());
         // source exist in target?
         if (targetFile.exists()) {
             // TODO if so, append
-            
+            FileIO.appendToHookFile(srcFile, targetFile);
         }
         else {
             // if not, copy
-            FileUtils.copyFile(file, targetFile);
+            FileUtils.copyFile(srcFile, targetFile);
         }
         targetFile = new File(targetFile.getCanonicalPath());
         // make executable
