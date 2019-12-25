@@ -31,19 +31,49 @@ public class FileIO {
      * @return List     List of strings
      * @throws MojoExecutionException  Failure to read file
      */
-    public static List<String> getLines(File f) throws MojoExecutionException {
-        try {
-            return FileUtils.readLines(f, encoding);
-        } 
-        catch (IOException e) {
-            throw new MojoExecutionException("Failed to read lines from " + f.getAbsolutePath(), e);
-        }
-        
+    public static List<String> getLines(File f) throws IOException {
+        return FileUtils.readLines(f, encoding);
     }
+    /**
+     * @param file
+     * @param lines
+     * @throws IOException
+     */
     public static void writeLines(File file, List<String> lines) throws IOException {
         FileUtils.writeLines(file, encoding, lines);
     }
-    public static boolean appendToHookFile(File srcFile, File targetFile) {
-        throw new RuntimeException("Not implemented yet.");
+    /**
+     * @param srcFile
+     * @param targetFile
+     * @return
+     * @throws IOException 
+     */
+    public static boolean appendToHookFile(File srcFile, File targetFile) throws IOException {
+        if (targetFile.exists()) {
+            // append contents as needed
+            List<String> srcLines = getLines(srcFile);
+            List<String> targetLines = getLines(targetFile);
+            String newLine = "bash "+srcFile.getCanonicalPath();
+            if (doesFileContainLine(targetLines, newLine)) {
+                return true;
+            }
+            else {
+                targetLines.add(1, newLine);
+            }
+            writeLines(targetFile, targetLines);
+        }
+        else {
+            FileUtils.copyFile(srcFile, targetFile);
+        }
+        return true;
+    }
+    public static boolean doesFileContainLine(List<String> lines, String searchString) {
+        for (String line:lines) {
+            if (line.contains(searchString)) {
+                return true;
+            }
+        }
+        return false;
+ 
     }
 }
