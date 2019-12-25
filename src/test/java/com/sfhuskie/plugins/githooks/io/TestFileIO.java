@@ -35,12 +35,19 @@ public class TestFileIO {
     MojoSettings s = new MojoSettings();
     File targetDir = new File(MojoSettings.userDir+"/target"); 
     
+    /**
+     * @throws Exception
+     */
     @Test 
     public void readDeployedPreCommitFile() throws Exception {
         File file = new File(s.getHooksSourceDirectory().getAbsolutePath()+"/pre-commit");
         List<String> lines = FileIO.getLines(file);
         assertTrue(lines.size() > 0);
     }
+    /**
+     * @throws IOException
+     * @throws MojoExecutionException
+     */
     @Test 
     public void writeLines() throws IOException, MojoExecutionException {
         List<String> lines = new ArrayList<String>();
@@ -51,6 +58,9 @@ public class TestFileIO {
         List<String> lines2 = FileIO.getLines(file);
         assertEquals(lines,lines2);
     }
+    /**
+     * @throws IOException
+     */
     @Test 
     public void appendToFile() throws IOException {
         
@@ -58,6 +68,6 @@ public class TestFileIO {
         File targetFile = new File(targetDir.getCanonicalPath()+"/pre-commit");
         FileUtils.forceDelete(targetFile);
         FileIO.appendToHookFile(srcFile, targetFile);
-        
+        // TODO Validate append
     }
 }
