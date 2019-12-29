@@ -52,7 +52,6 @@ public class GitHooksDeployer {
     public void overrideGitMetadataFolder(String s) {
         this.gitMetadataFolder = s;
     }
-
     /**
      * @throws IOException
      */

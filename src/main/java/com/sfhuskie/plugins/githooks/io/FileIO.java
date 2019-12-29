@@ -18,6 +18,8 @@ package com.sfhuskie.plugins.githooks.io;
  */
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 
@@ -75,5 +77,13 @@ public class FileIO {
         }
         return false;
  
+    }
+    public static void download(String url, String localFile) throws MalformedURLException, IOException {
+        final int timeout = 60000;
+        FileUtils.copyURLToFile(
+                new URL(url), 
+                new File(localFile), 
+                timeout, 
+                timeout);
     }
 }

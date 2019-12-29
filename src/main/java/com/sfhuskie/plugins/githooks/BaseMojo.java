@@ -33,9 +33,13 @@ abstract class BaseMojo extends AbstractMojo {
 
     @Parameter(defaultValue = "${project.build.directory}", property = "target.directory", required = true)
     protected File targetDirectory;
-    
+
+    @Parameter(defaultValue = MojoSettings.default_checkstyle_url, property = "checkstyle.url", required = true)
+    protected String checkstyleUrl;
+
    public void execute() throws MojoExecutionException, MojoFailureException {
        mavenLog.info("rootDirectory: "+rootDirectory);
        mavenLog.info("targetDirectory: "+targetDirectory);
+       mavenLog.info("checkstyleUrl: "+checkstyleUrl);
    }
 }

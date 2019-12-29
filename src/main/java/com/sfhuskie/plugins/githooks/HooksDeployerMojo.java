@@ -46,7 +46,6 @@ public class HooksDeployerMojo	extends BaseMojo {
 
 	public void execute() throws MojoExecutionException, MojoFailureException{
 	    super.execute();
-
+	    
 	}
-
 }
