@@ -74,16 +74,9 @@ public class GitHooksDeployer {
     public void processHookFile(File srcFile) throws IOException {
         File targetFile = new File(this.hooksDir.getCanonicalPath()+"/"+srcFile.getName());
         // source exist in target?
-        if (targetFile.exists()) {
-            // TODO if so, append
-            this.logger.info("Appending to "+targetFile.getAbsolutePath());
-            FileIO.addCommandToHooksFile(srcFile, targetFile);
-        }
-        else {
-            // if not, copy
-            this.logger.info("Copying "+srcFile.getAbsolutePath()+" to "+targetFile.getAbsolutePath());
-            FileUtils.copyFile(srcFile, targetFile);
-        }
+        this.logger.info("Deploying to "+targetFile.getAbsolutePath());
+        FileIO.addCommandToHooksFile(srcFile, targetFile);
+        
         targetFile = new File(targetFile.getCanonicalPath());
         // make executable
         if (!targetFile.canExecute()) {
