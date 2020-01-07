@@ -72,6 +72,9 @@ public class TestFileIO {
         FileIO.appendToHookFile(srcFile, targetFile);
         assertEquals(FileIO.getLines(srcFile),FileIO.getLines(targetFile));
     }
+    /**
+     * 
+     */
     @Test
     public void doesContainLine() {
         String searchString = "#!/bin/bash";
@@ -82,6 +85,9 @@ public class TestFileIO {
         }
         assertTrue(FileIO.doesFileContainLine(lines, searchString));
     }
+    /**
+     * 
+     */
     @Test
     public void doesNotContainLine() {
         String searchString = "#!/bin/bash";
@@ -91,6 +97,21 @@ public class TestFileIO {
             lines.add("String: "+i);
         }
         assertTrue(!FileIO.doesFileContainLine(lines, searchString));
+    }
+    @Test
+    public void mergeLists() {
+        List<String> expected = new ArrayList<String>();
+        expected.add("#!/bin/sh");
+        expected.add("echo \"steven was here!\"");
+        expected.add("echo \"steven went to New York!\"");
+        List<String> src = new ArrayList<String>();
+        src.add("#!/bin/sh");
+        src.add("echo \"steven was here!\"");
+        List<String> target = new ArrayList<String>();
+        expected.add("#!/bin/sh");
+        expected.add("echo \"steven went to New York!\"");
+        target = FileIO.mergeLists(src, target);
+        assertEquals(expected, target);
     }
     /**
      * @throws IOException
