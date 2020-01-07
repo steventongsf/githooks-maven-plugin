@@ -70,8 +70,11 @@ public class TestFileIO {
         if (targetFile.exists()) {
             FileUtils.forceDelete(targetFile);
         }
+        targetFile = new File(targetDir.getCanonicalPath()+"/pre-commit");
         FileIO.addCommandToHooksFile(srcFile, targetFile);
-        assertEquals(FileIO.getLines(srcFile),FileIO.getLines(targetFile));
+        List<String> expected = FileIO.getInitialScriptLines(srcFile);
+        List<String> actual = FileIO.getLines(targetFile);
+        assertEquals(expected,actual);
     }
     /**
      * 
