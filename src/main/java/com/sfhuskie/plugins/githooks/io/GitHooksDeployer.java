@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.shared.utils.io.FileUtils;
 
 import com.sfhuskie.plugins.githooks.MojoSettings;
@@ -30,21 +31,25 @@ public class GitHooksDeployer {
     File gitDir = null;
     File hooksDir = null;
     String gitMetadataFolder = ".git";
+    Log logger;
     /**
      * @param rootDir
      * @throws IOException
      */
-    public GitHooksDeployer(String rootDir) throws IOException {
+    public GitHooksDeployer(Log logger, String rootDir) throws IOException {
+        this.logger = logger;
         this.settings = new MojoSettings();
         gitDir = new File(rootDir+"/"+this.gitMetadataFolder);
-        if (gitDir.exists()) {
-            // Found
-            return;
-        }
-        // Find git directory. If not found, an exception is thrown
-        GitFolderFinder gff = new GitFolderFinder(new File(rootDir));
-        gitDir =  gff.find();
         hooksDir = new File(gitDir.getCanonicalPath()+this.settings.hooksRelativeDir);
+        if (!gitDir.exists()) {
+            // Find git directory. If not found, an exception is thrown
+            GitFolderFinder gff = new GitFolderFinder(new File(rootDir));
+            gitDir =  gff.find();
+            hooksDir = new File(gitDir.getCanonicalPath()+this.settings.hooksRelativeDir);
+        }
+        logger.info("gitDir: "+gitDir.getAbsolutePath());
+        logger.info("hooksDir: "+hooksDir.getAbsolutePath());
+
     }
     /**
      * @param s
@@ -59,7 +64,7 @@ public class GitHooksDeployer {
         File srcDir = this.settings.getHooksSourceDirectory();
         List<File> sourceFiles = Arrays.asList(srcDir.listFiles());
         for (File srcFile: sourceFiles) {
-            this.processHookFile(srcFile);
+            //this.processHookFile(srcFile);
         }
     }
     /**
@@ -71,10 +76,12 @@ public class GitHooksDeployer {
         // source exist in target?
         if (targetFile.exists()) {
             // TODO if so, append
-            FileIO.appendToHookFile(srcFile, targetFile);
+            this.logger.info("Appending to "+targetFile.getAbsolutePath());
+            FileIO.addCommandToHooksFile(srcFile, targetFile);
         }
         else {
             // if not, copy
+            this.logger.info("Copying "+srcFile.getAbsolutePath()+" to "+targetFile.getAbsolutePath());
             FileUtils.copyFile(srcFile, targetFile);
         }
         targetFile = new File(targetFile.getCanonicalPath());
