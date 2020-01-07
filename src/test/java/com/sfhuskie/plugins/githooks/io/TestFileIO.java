@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
@@ -69,7 +70,7 @@ public class TestFileIO {
         if (targetFile.exists()) {
             FileUtils.forceDelete(targetFile);
         }
-        FileIO.appendToHookFile(srcFile, targetFile);
+        FileIO.addCommandToHooksFile(srcFile, targetFile);
         assertEquals(FileIO.getLines(srcFile),FileIO.getLines(targetFile));
     }
     /**
@@ -99,43 +100,85 @@ public class TestFileIO {
         assertTrue(!FileIO.doesFileContainLine(lines, searchString));
     }
     @Test
-    public void mergeLists() {
+    public void addCommand() {
+        String newLine = "bash ~/myscript";
         List<String> expected = new ArrayList<String>();
-        expected.add("#!/bin/sh");
-        expected.add("echo \"steven was here!\"");
-        expected.add("echo \"steven went to New York!\"");
-        List<String> src = new ArrayList<String>();
-        src.add("#!/bin/sh");
-        src.add("echo \"steven was here!\"");
+            expected.add("#!/bin/sh");
+            expected.add(newLine);
+            expected.add("echo \"steven went to New York!\"");
+
         List<String> target = new ArrayList<String>();
-        expected.add("#!/bin/sh");
-        expected.add("echo \"steven went to New York!\"");
-        target = FileIO.mergeLists(src, target);
-        assertEquals(expected, target);
+            target.add("#!/bin/sh");
+            target.add("echo \"steven went to New York!\"");
+
+        List<String> actual = FileIO.addCommand(newLine, target);
+        assertEquals(expected, actual);
     }
     /**
      * @throws IOException
      */
     @Test 
-    public void appendToFile() throws IOException {
+    public void addCommandToExistingHooksFile() throws IOException {
         
         File srcFile = new File(this.s.getHooksSourceDirectory()+"/pre-commit");
         File targetFile = new File(targetDir.getCanonicalPath()+"/pre-commit");
-        List<String> lines = new ArrayList<String>();
-        lines.add("#!/bin/sh\n");
-        lines.add("echo 'Steven was here!'\n");
-        if (targetFile.exists()) {
-            FileUtils.forceDelete(targetFile);
-        }
-        FileIO.writeLines(targetFile, lines);
-        FileIO.appendToHookFile(srcFile, targetFile);
-        // Create expected list
-        List<String> expected = FileIO.getLines(srcFile);
-            // add to beginning
-            expected.add(0,"#!/bin/sh\n");
-            // add to end
-            expected.add(expected.size(),"echo 'Steven was here!'\n");
-        List<String> actual = FileIO.getLines(srcFile);   
+
+        // Command line to add
+        String newLine = FileIO.getCommandToAdd(srcFile);
+
+        // Create initial target file
+        List<String> targetLines = new ArrayList<String>();
+            targetLines.add("#!/bin/sh");
+            targetLines.add("echo 'Steven was here!'");
+
+            if (targetFile.exists()) {
+                FileUtils.forceDelete(targetFile);
+            }
+            // Write target file
+            FileIO.writeLines(targetFile, targetLines);
+        // Create expected
+        List<String> expected = new ArrayList<String>();
+            expected.add(0, targetLines.get(0));
+            expected.add(1, newLine);
+            for (int i = 1; i < targetLines.size(); i++) {
+                expected.add(targetLines.get(i));
+            }
+        // Add command
+        FileIO.addCommandToHooksFile(srcFile, targetFile);
+        List<String> actual = FileIO.getLines(targetFile);   
+        assertEquals(expected,actual);
+    }
+    /**
+     * @throws IOException
+     */
+    @Test 
+    public void notAddCommandToExistingHooksFile() throws IOException {
+        
+        File srcFile = new File(this.s.getHooksSourceDirectory()+"/pre-commit");
+        File targetFile = new File(targetDir.getCanonicalPath()+"/pre-commit");
+
+        // Command line to add
+        String newLine = FileIO.getCommandToAdd(srcFile);
+
+        // Create initial target file
+        List<String> targetLines = new ArrayList<String>();
+            targetLines.add("#!/bin/sh");
+            targetLines.add(newLine);
+            targetLines.add("echo 'Steven was here!'");
+
+            if (targetFile.exists()) {
+                FileUtils.forceDelete(targetFile);
+            }
+            // Write target file
+            FileIO.writeLines(targetFile, targetLines);
+        // Create expected
+        List<String> expected = new ArrayList<String>();
+            expected.add("#!/bin/sh");
+            expected.add(newLine);
+            expected.add("echo 'Steven was here!'");
+        // Add command
+        FileIO.addCommandToHooksFile(srcFile, targetFile);
+        List<String> actual = FileIO.getLines(targetFile);   
         assertEquals(expected,actual);
     }
 
