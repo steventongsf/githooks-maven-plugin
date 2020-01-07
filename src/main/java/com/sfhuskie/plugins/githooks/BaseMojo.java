@@ -24,6 +24,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugins.annotations.Parameter;
+import java.util.Arrays;
 
 abstract class BaseMojo extends AbstractMojo {
     Log mavenLog = getLog();
@@ -37,9 +38,17 @@ abstract class BaseMojo extends AbstractMojo {
     @Parameter(defaultValue = MojoSettings.default_checkstyle_url, property = "checkstyle.url", required = true)
     protected String checkstyleUrl;
 
+    @Parameter(defaultValue = MojoSettings.HOOKS, property = "hooks", required = true)
+    protected List hooks;
+
+    @Parameter(defaultValue = MojoSettings.CHECKSTYLE, property = "tools", required = true)
+    protected List tools;
+
+    
    public void execute() throws MojoExecutionException, MojoFailureException {
        mavenLog.info("rootDirectory: "+rootDirectory);
        mavenLog.info("targetDirectory: "+targetDirectory);
        mavenLog.info("checkstyleUrl: "+checkstyleUrl);
+       mavenLog.info("hooks: "+hooks.get(0)+","+hooks.get(1));
    }
 }
