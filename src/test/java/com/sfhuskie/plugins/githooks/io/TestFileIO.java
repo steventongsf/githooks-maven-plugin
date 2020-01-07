@@ -29,6 +29,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.junit.Test;
 
+import com.sfhuskie.plugins.githooks.CommandBuilder;
 import com.sfhuskie.plugins.githooks.MojoSettings;
 
 
@@ -124,7 +125,7 @@ public class TestFileIO {
         File targetFile = new File(targetDir.getCanonicalPath()+"/pre-commit");
 
         // Command line to add
-        String newLine = FileIO.getCommandToAdd(scriptFile);
+        String newLine = CommandBuilder.getCommandToAdd(scriptFile);
 
         // Create initial target file
         List<String> targetLines = new ArrayList<String>();
@@ -157,7 +158,7 @@ public class TestFileIO {
         File targetFile = new File(targetDir.getCanonicalPath()+"/pre-commit");
 
         // Command line to add
-        String newLine = FileIO.getCommandToAdd(scriptFile);
+        String newLine = CommandBuilder.getCommandToAdd(scriptFile);
 
         // Create initial target file
         List<String> targetLines = new ArrayList<String>();
