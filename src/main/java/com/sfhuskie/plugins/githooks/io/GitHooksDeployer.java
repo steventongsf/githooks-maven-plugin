@@ -79,6 +79,9 @@ public class GitHooksDeployer {
         
         targetFile = new File(targetFile.getCanonicalPath());
         // make executable
+        if (!srcFile.canExecute()) {
+            srcFile.setExecutable(true);
+        }
         if (!targetFile.canExecute()) {
             targetFile.setExecutable(true);
         }
