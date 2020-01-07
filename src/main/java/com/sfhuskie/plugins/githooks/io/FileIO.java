@@ -44,30 +44,36 @@ public class FileIO {
     public static void writeLines(File file, List<String> lines) throws IOException {
         FileUtils.writeLines(file, encoding, lines);
     }
+    public static String getCommandToAdd(File file) throws IOException {
+        return "bash "+file.getCanonicalPath();
+    }
     /**
      * @param srcFile
      * @param targetFile
-     * @return
+     * @return  boolean If successful.
      * @throws IOException 
      */
-    public static boolean appendToHookFile(File srcFile, File targetFile) throws IOException {
+    public static boolean addCommandToHooksFile(File srcFile, File targetFile) throws IOException {
+        String newLine = getCommandToAdd(srcFile);
+
         if (targetFile.exists()) {
-            // append contents as needed
-            List<String> srcLines = getLines(srcFile);
+            // add command
             List<String> targetLines = getLines(targetFile);
-            String newLine = "bash "+srcFile.getCanonicalPath();
-            if (doesFileContainLine(targetLines, newLine)) {
-                return true;
-            }
-            else {
-                targetLines.add(1, newLine);
-            }
+            targetLines = addCommand(newLine, targetLines);
             writeLines(targetFile, targetLines);
         }
         else {
+            // No append. Copy file
             FileUtils.copyFile(srcFile, targetFile);
         }
         return true;
+    }
+    public static List<String> addCommand(String newLine,List<String> target) {
+        // TODO 
+        if (!doesFileContainLine(target, newLine)) {
+            target.add(1, newLine);
+        }
+        return target;
     }
     public static boolean doesFileContainLine(List<String> lines, String searchString) {
         for (String line:lines) {
