@@ -64,7 +64,7 @@ public class GitHooksDeployer {
         File srcDir = this.settings.getHooksSourceDirectory();
         List<File> sourceFiles = Arrays.asList(srcDir.listFiles());
         for (File srcFile: sourceFiles) {
-            //this.processHookFile(srcFile);
+            this.processHookFile(srcFile);
         }
     }
     /**
