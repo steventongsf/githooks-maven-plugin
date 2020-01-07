@@ -62,12 +62,60 @@ public class TestFileIO {
      * @throws IOException
      */
     @Test 
+    public void deployFile() throws IOException {
+        
+        File srcFile = new File(this.s.getHooksSourceDirectory()+"/pre-commit");
+        File targetFile = new File(targetDir.getCanonicalPath()+"/pre-commit");
+        if (targetFile.exists()) {
+            FileUtils.forceDelete(targetFile);
+        }
+        FileIO.appendToHookFile(srcFile, targetFile);
+        assertEquals(FileIO.getLines(srcFile),FileIO.getLines(targetFile));
+    }
+    @Test
+    public void doesContainLine() {
+        String searchString = "#!/bin/bash";
+        List<String> lines = new ArrayList<String>();
+        lines.add("#!/bin/bash");
+        for (int i = 0; i < 10; i++) {
+            lines.add("String: "+i);
+        }
+        assertTrue(FileIO.doesFileContainLine(lines, searchString));
+    }
+    @Test
+    public void doesNotContainLine() {
+        String searchString = "#!/bin/bash";
+        List<String> lines = new ArrayList<String>();
+        lines.add("#!/bin/csh");
+        for (int i = 0; i < 10; i++) {
+            lines.add("String: "+i);
+        }
+        assertTrue(!FileIO.doesFileContainLine(lines, searchString));
+    }
+    /**
+     * @throws IOException
+     */
+    @Test 
     public void appendToFile() throws IOException {
         
         File srcFile = new File(this.s.getHooksSourceDirectory()+"/pre-commit");
         File targetFile = new File(targetDir.getCanonicalPath()+"/pre-commit");
-        FileUtils.forceDelete(targetFile);
+        List<String> lines = new ArrayList<String>();
+        lines.add("#!/bin/sh\n");
+        lines.add("echo 'Steven was here!'\n");
+        if (targetFile.exists()) {
+            FileUtils.forceDelete(targetFile);
+        }
+        FileIO.writeLines(targetFile, lines);
         FileIO.appendToHookFile(srcFile, targetFile);
-        // TODO Validate append
+        // Create expected list
+        List<String> expected = FileIO.getLines(srcFile);
+            // add to beginning
+            expected.add(0,"#!/bin/sh\n");
+            // add to end
+            expected.add(expected.size(),"echo 'Steven was here!'\n");
+        List<String> actual = FileIO.getLines(srcFile);   
+        assertEquals(expected,actual);
     }
+
 }
