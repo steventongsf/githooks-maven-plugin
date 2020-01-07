@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -63,10 +64,21 @@ public class FileIO {
             writeLines(targetFile, targetLines);
         }
         else {
-            // No append. Copy file
-            FileUtils.copyFile(srcFile, targetFile);
+            // No append. Write new file
+            writeInitialHooksFile(srcFile, targetFile);
         }
         return true;
+    }
+    public static List<String> getInitialScriptLines(File script) throws IOException {
+        List<String> lines = new ArrayList<String>();
+        lines.add("#!/bin/sh");
+        lines.add("");
+        lines.add(getCommandToAdd(script));
+        return lines;
+    }
+    public static void writeInitialHooksFile(File script, File out) throws IOException {
+        List<String> lines = getInitialScriptLines(script);
+        FileIO.writeLines(out,  lines);
     }
     public static List<String> addCommand(String newLine,List<String> target) {
         // TODO 
