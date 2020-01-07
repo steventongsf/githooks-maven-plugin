@@ -62,7 +62,9 @@ public class InstallCheckStyleMojo	extends BaseMojo {
         }
 	    if (! targetJar.exists()) {
 	        try {
+	            this.mavenLog.info("Downloading from "+this.checkstyleUrl);
                 FileIO.download(this.checkstyleUrl, targetJar.getCanonicalPath());
+                this.mavenLog.info("Downloaded to "+targetJar.getAbsolutePath());
             } 
 	        catch (IOException e) {
                 throw new MojoExecutionException("Failed to download file",e);
