@@ -28,8 +28,6 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 
-import com.sfhuskie.plugins.githooks.HooksFileMgr;
-
 import java.io.BufferedReader;
 import java.io.InputStream;
 /*

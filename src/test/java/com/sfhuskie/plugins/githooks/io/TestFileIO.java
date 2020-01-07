@@ -29,7 +29,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.junit.Test;
 
-import com.sfhuskie.plugins.githooks.HooksFileMgr;
 import com.sfhuskie.plugins.githooks.MojoSettings;
 
 

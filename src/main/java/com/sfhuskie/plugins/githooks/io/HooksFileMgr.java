@@ -1,4 +1,4 @@
-package com.sfhuskie.plugins.githooks;
+package com.sfhuskie.plugins.githooks.io;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,7 +22,9 @@ import java.util.Collections;
  */
 import java.util.List;
 
-import com.sfhuskie.plugins.githooks.io.FileIO;
+import org.apache.maven.shared.utils.io.FileUtils;
+
+import com.sfhuskie.plugins.githooks.MojoSettings;
 
 public class HooksFileMgr {
     List<String> tools;
@@ -56,24 +58,26 @@ public class HooksFileMgr {
      * @param lines
      * @throws IOException
      */
-    public void writeFiles(List<String> lines) throws IOException {
+    public void writeFiles(List<String> lines, File targetDir) throws IOException {
         if (this.hooks.contains(MojoSettings.PRECOMMIT)) {
             // TODO Write file
-            File precommit = new File("");
+            File precommit = new File(targetDir.getAbsolutePath()+"/bin/"+MojoSettings.PRECOMMIT);
+            FileUtils.forceMkdir(precommit);
             FileIO.writeLines(precommit, lines);
         }
         if (this.hooks.contains(MojoSettings.PREPUSH)) {
             // TODO Write file
-            File prepush = new File("");
+            File prepush = new File(targetDir.getAbsolutePath()+"/bin/"+MojoSettings.PREPUSH);
+            FileUtils.forceMkdir(prepush);
             FileIO.writeLines(prepush, lines);
         }
     }
     /**
      * @throws IOException
      */
-    public void deployScripts() throws IOException {
+    public void deployScripts(File targetDir) throws IOException {
         List<String> commands = getCommands();
-        writeFiles(commands);
+        writeFiles(commands, targetDir);
     }
     /**
      * @param file
