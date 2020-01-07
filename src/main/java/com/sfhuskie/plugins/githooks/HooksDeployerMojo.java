@@ -1,4 +1,6 @@
 package com.sfhuskie.plugins.githooks;
+import java.io.IOException;
+
 /*
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,11 +43,21 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 
+import com.sfhuskie.plugins.githooks.io.GitHooksDeployer;
+
 @Mojo(name = "deploy", defaultPhase = LifecyclePhase.COMPILE, requiresProject = true, threadSafe = true)
 public class HooksDeployerMojo	extends BaseMojo {
 
 	public void execute() throws MojoExecutionException, MojoFailureException{
 	    super.execute();
+	    GitHooksDeployer deployer;
+        try {
+            deployer = new GitHooksDeployer(this.mavenLog, this.rootDirectory.getAbsolutePath());
+            deployer.deploy();
+        } 
+        catch (IOException e) {
+            throw new MojoExecutionException("Failed to configure pre-commit.",e);
+        }
 	    
 	}
 }
