@@ -8,7 +8,7 @@ public class MojoSettings {
     File hooksSourceDirectory = new File(this.userDir.getAbsolutePath()+"/src/main/hooks");
     File hooksDir;
     File rootDir;
-    public String hooksRelativeDir = "/.git/hooks";
+    public String hooksRelativeDir = "/hooks";
 
     public MojoSettings() {
     }
