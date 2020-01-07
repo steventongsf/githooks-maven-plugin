@@ -27,6 +27,9 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.MojoExecutionException;
+
+import com.sfhuskie.plugins.githooks.CommandBuilder;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 /*
@@ -64,9 +67,6 @@ public class FileIO {
     public static void writeLines(File file, List<String> lines) throws IOException {
         FileUtils.writeLines(file, encoding, lines);
     }
-    public static String getCommandToAdd(File file) throws IOException {
-        return "bash "+file.getCanonicalPath();
-    }
     /**
      * @param srcFile
      * @param targetFile
@@ -74,7 +74,7 @@ public class FileIO {
      * @throws IOException 
      */
     public static boolean addCommandToHooksFile(File srcFile, File targetFile) throws IOException {
-        String newLine = getCommandToAdd(srcFile);
+        String newLine = CommandBuilder.getCommandToAdd(srcFile);
 
         if (targetFile.exists()) {
             // add command
@@ -97,7 +97,7 @@ public class FileIO {
         List<String> lines = new ArrayList<String>();
         lines.add("#!/bin/sh");
         lines.add("");
-        lines.add(getCommandToAdd(script));
+        lines.add(CommandBuilder.getCommandToAdd(script));
         return lines;
     }
     /**

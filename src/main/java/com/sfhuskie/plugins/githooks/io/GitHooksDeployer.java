@@ -30,20 +30,22 @@ public class GitHooksDeployer {
     MojoSettings settings;
     File gitDir = null;
     File hooksDir = null;
+    File targetDir = null;
     String gitMetadataFolder = ".git";
     Log logger;
     /**
      * @param rootDir
      * @throws IOException
      */
-    public GitHooksDeployer(Log logger, String rootDir) throws IOException {
+    public GitHooksDeployer(Log logger, File rootDir, File targetDir) throws IOException {
         this.logger = logger;
+        this.targetDir = targetDir;
         this.settings = new MojoSettings();
         gitDir = new File(rootDir+"/"+this.gitMetadataFolder);
         hooksDir = new File(gitDir.getCanonicalPath()+this.settings.hooksRelativeDir);
         if (!gitDir.exists()) {
             // Find git directory. If not found, an exception is thrown
-            GitFolderFinder gff = new GitFolderFinder(new File(rootDir));
+            GitFolderFinder gff = new GitFolderFinder(new File(rootDir.getAbsolutePath()));
             gitDir =  gff.find();
             hooksDir = new File(gitDir.getCanonicalPath()+this.settings.hooksRelativeDir);
         }
@@ -60,12 +62,15 @@ public class GitHooksDeployer {
     /**
      * @throws IOException
      */
-    public void deploy() throws IOException {
-        File srcDir = this.settings.getHooksSourceDirectory();
-        List<File> sourceFiles = Arrays.asList(srcDir.listFiles());
-        for (File srcFile: sourceFiles) {
-            this.processHookFile(srcFile);
-        }
+    public void deploy(List<String> tools, List<String> hooks) throws IOException {
+//        File srcDir = this.settings.getHooksSourceDirectory();
+//        List<File> sourceFiles = Arrays.asList(srcDir.listFiles());
+//        for (File srcFile: sourceFiles) {
+//            this.processHookFile(srcFile);
+//        }
+        // TODO Determine what files need to be created from configuration
+        // TODO create the files
+        // TODO Deploy to git hooks
     }
     /**
      * @param srcFile
@@ -79,9 +84,6 @@ public class GitHooksDeployer {
         
         targetFile = new File(targetFile.getCanonicalPath());
         // make executable
-        if (!srcFile.canExecute()) {
-            srcFile.setExecutable(true);
-        }
         if (!targetFile.canExecute()) {
             targetFile.setExecutable(true);
         }

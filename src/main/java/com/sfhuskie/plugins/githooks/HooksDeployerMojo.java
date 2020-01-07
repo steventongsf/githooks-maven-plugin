@@ -52,8 +52,8 @@ public class HooksDeployerMojo	extends BaseMojo {
 	    super.execute();
 	    GitHooksDeployer deployer;
         try {
-            deployer = new GitHooksDeployer(this.mavenLog, this.rootDirectory.getAbsolutePath());
-            deployer.deploy();
+            deployer = new GitHooksDeployer(this.mavenLog, this.rootDirectory, this.targetDirectory);
+            deployer.deploy(this.tools, this.hooks );
         } 
         catch (IOException e) {
             throw new MojoExecutionException("Failed to configure pre-commit.",e);
