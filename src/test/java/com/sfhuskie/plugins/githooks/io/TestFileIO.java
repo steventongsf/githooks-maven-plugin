@@ -1,20 +1,4 @@
 package com.sfhuskie.plugins.githooks.io;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.junit.Test;
-
-import com.sfhuskie.plugins.githooks.MojoSettings;
-
 /*
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,17 +16,32 @@ import com.sfhuskie.plugins.githooks.MojoSettings;
  * @author Steven Tong
  * 
  */
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.junit.Test;
+
+import com.sfhuskie.plugins.githooks.MojoSettings;
+
+
 public class TestFileIO {
     MojoSettings s = new MojoSettings();
     File targetDir = new File(MojoSettings.userDir+"/target"); 
-    
+    File scriptFile = new File(targetDir.getAbsoluteFile()+"/bin/pre-commit");
     /**
      * @throws Exception
      */
     @Test 
     public void readDeployedPreCommitFile() throws Exception {
-        File file = new File(s.getHooksSourceDirectory().getAbsolutePath()+"/pre-commit");
-        List<String> lines = FileIO.getLines(file);
+        List<String> lines = FileIO.readFileFromPath("java-check");
         assertTrue(lines.size() > 0);
     }
     /**
@@ -65,14 +64,13 @@ public class TestFileIO {
     @Test 
     public void deployFile() throws IOException {
         
-        File srcFile = new File(this.s.getHooksSourceDirectory()+"/pre-commit");
         File targetFile = new File(targetDir.getCanonicalPath()+"/pre-commit");
         if (targetFile.exists()) {
             FileUtils.forceDelete(targetFile);
         }
         targetFile = new File(targetDir.getCanonicalPath()+"/pre-commit");
-        FileIO.addCommandToHooksFile(srcFile, targetFile);
-        List<String> expected = FileIO.getInitialScriptLines(srcFile);
+        FileIO.addCommandToHooksFile(this.scriptFile, targetFile);
+        List<String> expected = FileIO.getInitialScriptLines(this.scriptFile);
         List<String> actual = FileIO.getLines(targetFile);
         assertEquals(expected,actual);
     }
@@ -123,11 +121,10 @@ public class TestFileIO {
     @Test 
     public void addCommandToExistingHooksFile() throws IOException {
         
-        File srcFile = new File(this.s.getHooksSourceDirectory()+"/pre-commit");
         File targetFile = new File(targetDir.getCanonicalPath()+"/pre-commit");
 
         // Command line to add
-        String newLine = FileIO.getCommandToAdd(srcFile);
+        String newLine = FileIO.getCommandToAdd(scriptFile);
 
         // Create initial target file
         List<String> targetLines = new ArrayList<String>();
@@ -147,7 +144,7 @@ public class TestFileIO {
                 expected.add(targetLines.get(i));
             }
         // Add command
-        FileIO.addCommandToHooksFile(srcFile, targetFile);
+        FileIO.addCommandToHooksFile(scriptFile, targetFile);
         List<String> actual = FileIO.getLines(targetFile);   
         assertEquals(expected,actual);
     }
@@ -157,11 +154,10 @@ public class TestFileIO {
     @Test 
     public void notAddCommandToExistingHooksFile() throws IOException {
         
-        File srcFile = new File(this.s.getHooksSourceDirectory()+"/pre-commit");
         File targetFile = new File(targetDir.getCanonicalPath()+"/pre-commit");
 
         // Command line to add
-        String newLine = FileIO.getCommandToAdd(srcFile);
+        String newLine = FileIO.getCommandToAdd(scriptFile);
 
         // Create initial target file
         List<String> targetLines = new ArrayList<String>();
@@ -180,9 +176,13 @@ public class TestFileIO {
             expected.add(newLine);
             expected.add("echo 'Steven was here!'");
         // Add command
-        FileIO.addCommandToHooksFile(srcFile, targetFile);
+        FileIO.addCommandToHooksFile(scriptFile, targetFile);
         List<String> actual = FileIO.getLines(targetFile);   
         assertEquals(expected,actual);
     }
-
+    @Test
+    public void testReadFileFromStream() throws Exception {
+        List<String> actual = FileIO.readFileFromPath("java-check");
+        assertEquals(FileIO.getLines(new File("src/main/resources/templates/java-check")), actual);
+    }
 }
