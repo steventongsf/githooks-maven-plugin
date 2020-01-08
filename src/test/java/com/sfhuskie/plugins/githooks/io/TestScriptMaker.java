@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.maven.shared.utils.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -57,7 +58,14 @@ public class TestScriptMaker {
         assertTrue(!cmds.contains(prepush.getAbsolutePath()));
     }
     @Test
-    public void generate() {
-        
+    public void generate() throws IOException {
+        hooks.add(MojoSettings.PRECOMMIT);
+        ScriptMaker sm = new ScriptMaker(tools, hooks);
+        File destDir = new File(MojoSettings.userDir+"/target/bin");
+        File precommit = new File(MojoSettings.userDir+"/target/bin/"+MojoSettings.PRECOMMIT);
+        FileUtils.delete(precommit);
+        sm.generate(destDir);
+        assertTrue(precommit.exists());
+        // TODO Compare contents
     }
 }

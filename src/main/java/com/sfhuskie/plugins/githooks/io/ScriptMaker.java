@@ -62,9 +62,9 @@ public class ScriptMaker {
     public void generate(File destDir) throws IOException {
         if (this.hooks.contains(MojoSettings.PRECOMMIT)) {
             // TODO Write file
-            File precommit = new File(destDir.getAbsolutePath()+"/bin/"+MojoSettings.PRECOMMIT);
+            File precommit = new File(destDir.getAbsolutePath()+"/"+MojoSettings.PRECOMMIT);
             List<String> lines = getCommands(precommit);
-            FileUtils.forceMkdir(precommit);
+            FileUtils.forceMkdir(destDir);
             FileIO.writeLines(precommit, lines);
         }
         if (this.hooks.contains(MojoSettings.PREPUSH)) {
