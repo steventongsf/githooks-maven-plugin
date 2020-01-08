@@ -66,6 +66,7 @@ public class TestScriptMaker {
         FileUtils.delete(precommit);
         sm.generate(destDir);
         assertTrue(precommit.exists());
-        // TODO Compare contents
+        List<String> cmds = sm.getCommands(precommit);
+        assertEquals(cmds, FileIO.getLines(precommit));
     }
 }
