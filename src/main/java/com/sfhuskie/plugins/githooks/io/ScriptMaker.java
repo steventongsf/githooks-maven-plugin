@@ -45,7 +45,9 @@ public class ScriptMaker {
         if (this.tools.contains(MojoSettings.CHECKSTYLE)) {
             List<String> commands = new ArrayList<String>();
             List<String> javaCheck = FileIO.readFileFromPath("java-check");
-            Collections.copy(commands, javaCheck);
+            for (String line: javaCheck) {
+                commands.add(line);
+            }
             commands.add(getCommandToAdd(script));
             return commands;
         }

@@ -1,6 +1,18 @@
 package com.sfhuskie.plugins.githooks.io;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.junit.Before;
 import org.junit.Test;
+
+import com.sfhuskie.plugins.githooks.MojoSettings;
 
 /*
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,17 +31,33 @@ import org.junit.Test;
  * @author Steven Tong
  * 
  */
-public class TestHooksFileMgr {
-    @Test
-    public void getCommands() {
-        
+public class TestScriptMaker {
+    List<String> hooks;
+    List<String> tools;
+    @Before
+    public void before() {
+        hooks = new ArrayList<String>();
+        tools = new ArrayList<String>();
+        tools.add(MojoSettings.CHECKSTYLE);
     }
     @Test
-    public void writeFiles() {
-        
+    public void getCommandToAdd() throws IOException {
+        File script = new File(MojoSettings.userDir+"/"+MojoSettings.PRECOMMIT);
+        assertEquals("bash "+script.getAbsolutePath(), ScriptMaker.getCommandToAdd(script));
     }
     @Test
-    public void deployScripts() {
+    public void getCommandsPrecommit() throws IOException {
+        hooks.add(MojoSettings.PRECOMMIT);
+        ScriptMaker sm = new ScriptMaker(tools, hooks);
+        File precommit = new File(MojoSettings.userDir+"/"+MojoSettings.PRECOMMIT);
+        File prepush = new File(MojoSettings.userDir+"/"+MojoSettings.PREPUSH);
+        List<String> cmds = sm.getCommands(precommit);
+        assertTrue(cmds.contains(ScriptMaker.getCommandToAdd(precommit)));
+        assertTrue(cmds.get(0).equals("#!/bin/sh"));
+        assertTrue(!cmds.contains(prepush.getAbsolutePath()));
+    }
+    @Test
+    public void generate() {
         
     }
 }
