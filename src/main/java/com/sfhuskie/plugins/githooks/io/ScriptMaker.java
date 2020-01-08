@@ -63,16 +63,20 @@ public class ScriptMaker {
         if (this.hooks.contains(MojoSettings.PRECOMMIT)) {
             // TODO Write file
             File precommit = new File(destDir.getAbsolutePath()+"/"+MojoSettings.PRECOMMIT);
-            List<String> lines = getCommands(precommit);
-            FileUtils.forceMkdir(destDir);
-            FileIO.writeLines(precommit, lines);
+            createScript(precommit, destDir);
         }
         if (this.hooks.contains(MojoSettings.PREPUSH)) {
             // TODO Write file
-            File prepush = new File(destDir.getAbsolutePath()+"/bin/"+MojoSettings.PREPUSH);
-            List<String> lines = getCommands(prepush);
-            FileUtils.forceMkdir(prepush);
-            FileIO.writeLines(prepush, lines);
+            File prepush = new File(destDir.getAbsolutePath()+"/"+MojoSettings.PREPUSH);
+            createScript(prepush, destDir);
+        }
+    }
+    protected void createScript(File script, File destDir) throws IOException {
+        List<String> lines = getCommands(script);
+        FileUtils.forceMkdir(destDir);
+        FileIO.writeLines(script, lines);
+        if (!script.canExecute()) {
+            script.setExecutable(true);
         }
     }
     /**
