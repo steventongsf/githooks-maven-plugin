@@ -72,7 +72,7 @@ public class FileIO {
      * @throws IOException 
      */
     public static boolean addCommandToHooksFile(File srcFile, File targetFile) throws IOException {
-        String newLine = HooksFileMgr.getCommandToAdd(srcFile);
+        String newLine = ScriptMaker.getCommandToAdd(srcFile);
 
         if (targetFile.exists()) {
             // add command
@@ -95,7 +95,7 @@ public class FileIO {
         List<String> lines = new ArrayList<String>();
         lines.add("#!/bin/sh");
         lines.add("");
-        lines.add(HooksFileMgr.getCommandToAdd(script));
+        lines.add(ScriptMaker.getCommandToAdd(script));
         return lines;
     }
     /**

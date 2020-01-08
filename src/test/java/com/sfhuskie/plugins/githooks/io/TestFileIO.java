@@ -124,7 +124,7 @@ public class TestFileIO {
         File targetFile = new File(targetDir.getCanonicalPath()+"/pre-commit");
 
         // Command line to add
-        String newLine = HooksFileMgr.getCommandToAdd(scriptFile);
+        String newLine = ScriptMaker.getCommandToAdd(scriptFile);
 
         // Create initial target file
         List<String> targetLines = new ArrayList<String>();
@@ -157,7 +157,7 @@ public class TestFileIO {
         File targetFile = new File(targetDir.getCanonicalPath()+"/pre-commit");
 
         // Command line to add
-        String newLine = HooksFileMgr.getCommandToAdd(scriptFile);
+        String newLine = ScriptMaker.getCommandToAdd(scriptFile);
 
         // Create initial target file
         List<String> targetLines = new ArrayList<String>();
