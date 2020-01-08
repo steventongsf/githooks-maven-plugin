@@ -63,14 +63,9 @@ public class GitHooksDeployer {
      * @throws IOException
      */
     public void deploy(List<String> tools, List<String> hooks) throws IOException {
-//        File srcDir = this.settings.getHooksSourceDirectory();
-//        List<File> sourceFiles = Arrays.asList(srcDir.listFiles());
-//        for (File srcFile: sourceFiles) {
-//            this.processHookFile(srcFile);
-//        }
-        // TODO Determine what files need to be created from configuration
-        // TODO create the files
-        // TODO Deploy to git hooks
+        ScriptMaker maker = new ScriptMaker(tools, hooks);
+        File destDir = new File(this.targetDir.getAbsolutePath()+"/bin");
+        maker.generate(destDir);
     }
     /**
      * @param srcFile
