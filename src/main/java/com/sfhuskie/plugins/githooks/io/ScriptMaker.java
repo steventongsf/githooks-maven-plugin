@@ -26,14 +26,14 @@ import org.apache.maven.shared.utils.io.FileUtils;
 
 import com.sfhuskie.plugins.githooks.MojoSettings;
 
-public class HooksFileMgr {
+public class ScriptMaker {
     List<String> tools;
     List<String> hooks;
     /**
      * @param tools
      * @param hooks
      */
-    public HooksFileMgr(List<String> tools, List<String> hooks) {
+    public ScriptMaker(List<String> tools, List<String> hooks) {
         this.tools = tools;
         this.hooks = hooks;
     }
@@ -41,43 +41,37 @@ public class HooksFileMgr {
      * @return
      * @throws IOException
      */
-    public List<String> getCommands() throws IOException {
-        List<String> commands = new ArrayList<String>();
-        List<String> javaCheck = FileIO.readFileFromPath("java-check");
+    public List<String> getCommands(File script) throws IOException {
         if (this.tools.contains(MojoSettings.CHECKSTYLE)) {
-            // Continue
+            List<String> commands = new ArrayList<String>();
+            List<String> javaCheck = FileIO.readFileFromPath("java-check");
             Collections.copy(commands, javaCheck);
-            commands.add(getCommandToAdd(null));
+            commands.add(getCommandToAdd(script));
+            return commands;
         }
         else {
             throw new RuntimeException("Tool not supported.");
         }
-        return commands;
     }
     /**
-     * @param lines
+     * @param destDir       Directory to write files to
      * @throws IOException
      */
-    public void writeFiles(List<String> lines, File targetDir) throws IOException {
+    public void generate(File destDir) throws IOException {
         if (this.hooks.contains(MojoSettings.PRECOMMIT)) {
             // TODO Write file
-            File precommit = new File(targetDir.getAbsolutePath()+"/bin/"+MojoSettings.PRECOMMIT);
+            File precommit = new File(destDir.getAbsolutePath()+"/bin/"+MojoSettings.PRECOMMIT);
+            List<String> lines = getCommands(precommit);
             FileUtils.forceMkdir(precommit);
             FileIO.writeLines(precommit, lines);
         }
         if (this.hooks.contains(MojoSettings.PREPUSH)) {
             // TODO Write file
-            File prepush = new File(targetDir.getAbsolutePath()+"/bin/"+MojoSettings.PREPUSH);
+            File prepush = new File(destDir.getAbsolutePath()+"/bin/"+MojoSettings.PREPUSH);
+            List<String> lines = getCommands(prepush);
             FileUtils.forceMkdir(prepush);
             FileIO.writeLines(prepush, lines);
         }
-    }
-    /**
-     * @throws IOException
-     */
-    public void deployScripts(File targetDir) throws IOException {
-        List<String> commands = getCommands();
-        writeFiles(commands, targetDir);
     }
     /**
      * @param file
