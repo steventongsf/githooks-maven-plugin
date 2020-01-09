@@ -35,7 +35,7 @@
                  <execution>
                      <id>deploy</id>
                      <phase>initialize</phase>
-                     <goals><goal>update-hooks-scripts</goal></goals>
+                     <goals><goal>enable-checkstyle-hooks</goal></goals>
                      <configuration>
                      </configuration>
                  </execution>			  
