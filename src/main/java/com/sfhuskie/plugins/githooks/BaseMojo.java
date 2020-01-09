@@ -38,6 +38,9 @@ abstract class BaseMojo extends AbstractMojo {
     @Parameter(defaultValue = MojoSettings.default_checkstyle_url, property = "checkstyle.url", required = true)
     protected String checkstyleUrl;
 
+    @Parameter(defaultValue = MojoSettings.default_checkstyle_xml_url, property = "checkstyle.xml.url", required = true)
+    protected String checkstyleXmlUrl;
+
     @Parameter(defaultValue = MojoSettings.HOOKS, property = "hooks", required = true)
     protected List hooks;
 
