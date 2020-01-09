@@ -17,6 +17,9 @@ package com.sfhuskie.plugins.githooks;
  * 
  */
 import java.io.File;
+import java.io.IOException;
+
+import com.sfhuskie.plugins.githooks.io.GitFolderFinder;
 
 public class MojoSettings {
     public static final String PRECOMMIT = "pre-commit";
@@ -24,13 +27,50 @@ public class MojoSettings {
     public static final String HOOKS = PRECOMMIT+","+PREPUSH;
     public static final String CHECKSTYLE = "check-style";
     public static final String default_checkstyle_url = "https://github.com/checkstyle/checkstyle/releases/download/checkstyle-8.27/checkstyle-8.27-all.jar";
+    public static final String default_checkstyle_xml_url = "https://github.com/sfhuskie/tools-configurations/blob/master/checkstyle/java/whitespace.xml";
     public static final File userDir = new File(System.getProperty("user.dir"));
-    //File hooksSourceDirectory = new File(this.userDir.getAbsolutePath()+"/src/main/hooks");
+    public static final String hooksRelativeDir = "/hooks";
+    String gitMetadataFolder = ".git";
+    File gitDir;
     File hooksDir;
     File rootDir;
-    public String hooksRelativeDir = "/hooks";
+    File toolsBaseDir;
 
-    public MojoSettings() {
+    public MojoSettings() throws IOException {
+        gitDir = new File(rootDir+"/"+this.gitMetadataFolder);
+        hooksDir = new File(gitDir.getCanonicalPath()+"/"+this.hooksRelativeDir);
+        if (!gitDir.exists()) {
+            // Find git directory. If not found, an exception is thrown
+            GitFolderFinder gff = new GitFolderFinder(new File(userDir.getAbsolutePath()));
+            this.gitDir =  gff.find();
+            this.hooksDir = new File(gitDir.getCanonicalPath()+hooksRelativeDir);
+        }
+        this.toolsBaseDir = new File(this.getHooksDir().getCanonicalPath()+"/tools");
+    }
+    /**
+     * @param s
+     */
+    public void overrideGitMetadataFolder(String s) {
+        this.gitMetadataFolder = s;
+    }
+    public File getGitDir() {
+        return gitDir;
+    }
+    public File getHooksDir() {
+        return hooksDir;
+    }
+    public File getToolsBaseDir() {
+        return toolsBaseDir;
+    }
+    /**
+     * @param file
+     * @return
+     * @throws IOException
+     */
+    public static String getCommandToAdd(File file) throws IOException {
+        MojoSettings s = new MojoSettings();
+        // TODO Add argument for configuration file
+        return "bash "+file.getCanonicalPath();
     }
 
 }
