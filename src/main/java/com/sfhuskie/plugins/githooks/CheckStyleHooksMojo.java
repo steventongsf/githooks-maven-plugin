@@ -53,7 +53,7 @@ public class CheckStyleHooksMojo	extends BaseMojo {
 	    GitHooksMgr gitHooksMgr;
         try {
             gitHooksMgr = new GitHooksMgr(this.mavenLog, this.targetDirectory);
-            gitHooksMgr.deploy(this.tools, this.hooks );
+            gitHooksMgr.updateHooks(this.tools, this.hooks );
         } 
         catch (IOException e) {
             throw new MojoExecutionException("Failed to configure pre-commit.",e);

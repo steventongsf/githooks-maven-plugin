@@ -42,16 +42,16 @@ public class GitHooksMgr {
         logger.info("hooksDir: "+this.settings.getHooksDir().getAbsolutePath());
 
     }
-    /**
+    /**  Used to override metadata name for testing.
      * @param s
      */
-    public void overrideGitMetadataFolder(String s) {
+    protected void overrideGitMetadataFolder(String s) {
         this.settings.overrideGitMetadataFolder(s);
     }
     /**
      * @throws IOException
      */
-    public void deploy(List<String> tools, List<String> hookScripts) throws IOException {
+    public void updateHooks(List<String> tools, List<String> hookScripts) throws IOException {
         // Process hook files
         for (String hookScript: hookScripts) {
             File script = new File(hookScript);
