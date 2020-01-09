@@ -46,6 +46,7 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 
 import com.sfhuskie.plugins.githooks.io.FileIO;
+import com.sfhuskie.plugins.githooks.io.ScriptMaker;
 
 @Mojo(name = "install-checkstyle", defaultPhase = LifecyclePhase.COMPILE, requiresProject = true, threadSafe = true)
 public class InstallCheckStyleMojo	extends BaseMojo {
@@ -63,6 +64,13 @@ public class InstallCheckStyleMojo	extends BaseMojo {
             mavenLog.info("Downloaded "+jarFile.getAbsolutePath());
             FileIO.download(xmlUrl, xmlFile);
             mavenLog.info("Downloaded "+xmlFile);
+            // Generate scripts
+            ScriptMaker scriptMaker = new ScriptMaker(tools, hooks);
+            for (String tool:tools) {
+                File destDir = new File(settings.getToolsBaseDir().getCanonicalPath()+"/"+tool);
+                scriptMaker.generateScripts(destDir);
+            }
+
         } 
         catch (IOException e) {
             throw new MojoExecutionException("Failed to install checkstyle component.",e);

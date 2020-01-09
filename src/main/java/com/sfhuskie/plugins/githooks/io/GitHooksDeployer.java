@@ -52,12 +52,6 @@ public class GitHooksDeployer {
      * @throws IOException
      */
     public void deploy(List<String> tools, List<String> hookScripts) throws IOException {
-        // Generate scripts
-        ScriptMaker scriptMaker = new ScriptMaker(tools, hookScripts);
-        for (String tool:tools) {
-            File destDir = new File(this.settings.getToolsBaseDir().getCanonicalPath()+"/"+tool);
-            scriptMaker.generateScripts(destDir);
-        }
         // Process hook files
         for (String hookScript: hookScripts) {
             File script = new File(hookScript);
