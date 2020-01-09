@@ -48,7 +48,7 @@ public class ScriptMaker {
             for (String line: javaCheck) {
                 commands.add(line);
             }
-            commands.add(MojoSettings.getCommandToAdd(script));
+            commands.add(MojoSettings.getCheckstyleCommandToAdd());
             return commands;
         }
         else {
