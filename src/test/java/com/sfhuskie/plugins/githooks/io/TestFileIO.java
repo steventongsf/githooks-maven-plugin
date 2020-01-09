@@ -21,21 +21,27 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.sfhuskie.plugins.githooks.MojoSettings;
 
 
 public class TestFileIO {
-    MojoSettings s = new MojoSettings();
+    MojoSettings settings;
     File targetDir = new File(MojoSettings.userDir+"/target"); 
     File scriptFile = new File(targetDir.getAbsoluteFile()+"/bin/pre-commit");
+    @Before
+    public void before() throws IOException {
+        settings = new MojoSettings();
+    }
     /**
      * @throws Exception
      */
@@ -53,7 +59,7 @@ public class TestFileIO {
         List<String> lines = new ArrayList<String>();
         lines.add("#!/bin/sh");
         lines.add("echo 'steven was here'");
-        File file = new File(s.userDir + "/target/test.sh");
+        File file = new File(settings.userDir + "/target/test.sh");
         FileIO.writeLines(file, lines);
         List<String> lines2 = FileIO.getLines(file);
         assertEquals(lines,lines2);
@@ -124,7 +130,7 @@ public class TestFileIO {
         File targetFile = new File(targetDir.getCanonicalPath()+"/pre-commit");
 
         // Command line to add
-        String newLine = ScriptMaker.getCommandToAdd(scriptFile);
+        String newLine = MojoSettings.getCommandToAdd(scriptFile);
 
         // Create initial target file
         List<String> targetLines = new ArrayList<String>();
@@ -157,7 +163,7 @@ public class TestFileIO {
         File targetFile = new File(targetDir.getCanonicalPath()+"/pre-commit");
 
         // Command line to add
-        String newLine = ScriptMaker.getCommandToAdd(scriptFile);
+        String newLine = MojoSettings.getCommandToAdd(scriptFile);
 
         // Create initial target file
         List<String> targetLines = new ArrayList<String>();
@@ -184,5 +190,16 @@ public class TestFileIO {
     public void testReadFileFromStream() throws Exception {
         List<String> actual = FileIO.readFileFromPath("java-check");
         assertEquals(FileIO.getLines(new File("src/main/resources/templates/java-check")), actual);
+    }
+    @Test
+    public void downloadJar() throws MalformedURLException, IOException {
+        String url = MojoSettings.default_checkstyle_url;
+        File jarFile = new File(MojoSettings.userDir+"/tmp/downloadJarTest.jar");
+        if (jarFile.exists()) {
+            FileUtils.forceDelete(jarFile);
+        }
+        FileIO.downloadJar(url, jarFile);
+        assertTrue(jarFile.exists());
+        FileUtils.forceDelete(jarFile);
     }
 }

@@ -27,6 +27,9 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.logging.Log;
+
+import com.sfhuskie.plugins.githooks.MojoSettings;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -72,7 +75,7 @@ public class FileIO {
      * @throws IOException 
      */
     public static boolean addCommandToHooksFile(File srcFile, File targetFile) throws IOException {
-        String newLine = ScriptMaker.getCommandToAdd(srcFile);
+        String newLine = MojoSettings.getCommandToAdd(srcFile);
 
         if (targetFile.exists()) {
             // add command
@@ -95,7 +98,7 @@ public class FileIO {
         List<String> lines = new ArrayList<String>();
         lines.add("#!/bin/sh");
         lines.add("");
-        lines.add(ScriptMaker.getCommandToAdd(script));
+        lines.add(MojoSettings.getCommandToAdd(script));
         return lines;
     }
     /**
@@ -113,7 +116,6 @@ public class FileIO {
      * @return
      */
     public static List<String> addCommand(String newLine,List<String> target) {
-        // TODO 
         if (!doesFileContainLine(target, newLine)) {
             target.add(1, newLine);
         }
@@ -161,5 +163,10 @@ public class FileIO {
             lines.add(line);
         }
         return lines;
+    }
+    public static void downloadJar(String url, File jarFile) throws MalformedURLException, IOException {
+        if (! jarFile.exists()) {
+            FileIO.download(url, jarFile.getCanonicalPath());
+        }
     }
 }
