@@ -52,23 +52,20 @@ public class InstallCheckStyleMojo	extends BaseMojo {
 
 	public void execute() throws MojoExecutionException, MojoFailureException {
 	    super.execute();
-	    File targetJar;
-	    File url = new File(this.checkstyleUrl);
         try {
-            targetJar = new File(this.targetDirectory.getCanonicalPath()+"/"+url.getName());
+            String jarUrl = this.checkstyleUrl;
+            String xmlUrl = this.checkstyleXmlUrl;
+            MojoSettings settings = new MojoSettings();
+            String targetDir = settings.getToolsBaseDir().getCanonicalPath()+"/"+MojoSettings.CHECKSTYLE;
+            File jarFile = new File(targetDir+"/checkstyle.jar");
+            String xmlFile = targetDir+"/whitespace.xml";
+            FileIO.downloadJar(jarUrl, jarFile);
+            mavenLog.info("Downloaded "+jarFile.getAbsolutePath());
+            FileIO.download(xmlUrl, xmlFile);
+            mavenLog.info("Downloaded "+xmlFile);
         } 
         catch (IOException e) {
-            throw new MojoExecutionException("Failed to create File instance",e);
+            throw new MojoExecutionException("Failed to install checkstyle component.",e);
         }
-	    if (! targetJar.exists()) {
-	        try {
-	            this.mavenLog.info("Downloading from "+this.checkstyleUrl);
-                FileIO.download(this.checkstyleUrl, targetJar.getCanonicalPath());
-                this.mavenLog.info("Downloaded to "+targetJar.getAbsolutePath());
-            } 
-	        catch (IOException e) {
-                throw new MojoExecutionException("Failed to download file",e);
-            }
-	    }
 	}
 }
