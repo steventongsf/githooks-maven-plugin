@@ -36,7 +36,16 @@ public class MojoSettings {
     File rootDir;
     File toolsBaseDir;
 
-    public MojoSettings() throws IOException {
+    static MojoSettings mojoSettings = null;
+    
+    public static MojoSettings getInstance() throws IOException {
+        if (mojoSettings == null) {
+            mojoSettings = new MojoSettings();
+        }
+        return mojoSettings;
+    }
+    
+    private MojoSettings() throws IOException {
         gitDir = new File(rootDir+"/"+this.gitMetadataFolder);
         hooksDir = new File(gitDir.getCanonicalPath()+"/"+this.hooksRelativeDir);
         if (!gitDir.exists()) {

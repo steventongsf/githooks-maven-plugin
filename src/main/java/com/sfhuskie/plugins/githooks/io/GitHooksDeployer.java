@@ -37,7 +37,7 @@ public class GitHooksDeployer {
     public GitHooksDeployer(Log logger, File rootDir, File targetDir) throws IOException {
         this.logger = logger;
         this.targetDir = targetDir;
-        this.settings = new MojoSettings();
+        this.settings = MojoSettings.getInstance();
         logger.info("gitDir: "+this.settings.getGitDir().getAbsolutePath());
         logger.info("hooksDir: "+this.settings.getHooksDir().getAbsolutePath());
 

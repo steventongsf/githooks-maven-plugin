@@ -40,7 +40,7 @@ public class TestFileIO {
     File scriptFile = new File(targetDir.getAbsoluteFile()+"/bin/pre-commit");
     @Before
     public void before() throws IOException {
-        settings = new MojoSettings();
+        settings = MojoSettings.getInstance();
     }
     /**
      * @throws Exception

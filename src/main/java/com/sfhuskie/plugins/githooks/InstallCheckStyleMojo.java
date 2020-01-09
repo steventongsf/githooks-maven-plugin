@@ -55,7 +55,7 @@ public class InstallCheckStyleMojo	extends BaseMojo {
         try {
             String jarUrl = this.checkstyleUrl;
             String xmlUrl = this.checkstyleXmlUrl;
-            MojoSettings settings = new MojoSettings();
+            MojoSettings settings = MojoSettings.getInstance();
             String targetDir = settings.getToolsBaseDir().getCanonicalPath()+"/"+MojoSettings.CHECKSTYLE;
             File jarFile = new File(targetDir+"/checkstyle.jar");
             String xmlFile = targetDir+"/whitespace.xml";
