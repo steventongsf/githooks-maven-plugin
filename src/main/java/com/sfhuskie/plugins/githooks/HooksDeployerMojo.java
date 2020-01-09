@@ -45,7 +45,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 
 import com.sfhuskie.plugins.githooks.io.GitHooksDeployer;
 
-@Mojo(name = "deploy", defaultPhase = LifecyclePhase.COMPILE, requiresProject = true, threadSafe = true)
+@Mojo(name = "update-hooks-scripts", defaultPhase = LifecyclePhase.COMPILE, requiresProject = true, threadSafe = true)
 public class HooksDeployerMojo	extends BaseMojo {
 
 	public void execute() throws MojoExecutionException, MojoFailureException{
