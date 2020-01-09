@@ -136,7 +136,7 @@ public class MojoSettings {
         String xml = s.getHooksDir()+"/"+s.CHECKSTYLE+"/"+checkstyleXml;
         jar = jar.replace("\\", "/");
         xml = xml.replace("\\", "/");
-        String cmd = String.format("%s %s -c %s %n","bash", jar, xml);
+        String cmd = String.format("%s %s -c %s .","bash", jar, xml);
         return cmd;
     }
 }
