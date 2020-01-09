@@ -50,10 +50,10 @@ public class CheckStyleHooksMojo	extends BaseMojo {
 
 	public void execute() throws MojoExecutionException, MojoFailureException{
 	    super.execute();
-	    GitHooksMgr deployer;
+	    GitHooksMgr gitHooksMgr;
         try {
-            deployer = new GitHooksMgr(this.mavenLog, this.rootDirectory, this.targetDirectory);
-            deployer.deploy(this.tools, this.hooks );
+            gitHooksMgr = new GitHooksMgr(this.mavenLog, this.targetDirectory);
+            gitHooksMgr.deploy(this.tools, this.hooks );
         } 
         catch (IOException e) {
             throw new MojoExecutionException("Failed to configure pre-commit.",e);

@@ -34,7 +34,7 @@ public class GitHooksMgr {
      * @param rootDir
      * @throws IOException
      */
-    public GitHooksMgr(Log logger, File rootDir, File targetDir) throws IOException {
+    public GitHooksMgr(Log logger, File targetDir) throws IOException {
         this.logger = logger;
         this.targetDir = targetDir;
         this.settings = MojoSettings.getInstance();
