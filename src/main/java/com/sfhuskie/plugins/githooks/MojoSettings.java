@@ -119,9 +119,9 @@ public class MojoSettings {
     public static String getCommandToAdd(File file) throws IOException {
         MojoSettings s = new MojoSettings();
         // TODO Add argument for configuration file
-        String script = s.getHooksDir()+"/"+file.getName();
+        String script = file.getCanonicalPath();
         script = script.replace("\\", "/");
-        String cmd = String.format("%s %s %n","bash", script);
+        String cmd = String.format("%s %s","bash", script);
         return cmd;
     }
     /**
@@ -132,8 +132,8 @@ public class MojoSettings {
     public static String getCheckstyleCommandToAdd() throws IOException {
         MojoSettings s = new MojoSettings();
         // TODO Add argument for configuration file
-        String jar = s.getHooksDir()+"/"+checkstyleJar;
-        String xml = s.getHooksDir()+"/"+checkstyleXml;
+        String jar = s.getHooksDir()+"/"+s.CHECKSTYLE+"/"+checkstyleJar;
+        String xml = s.getHooksDir()+"/"+s.CHECKSTYLE+"/"+checkstyleXml;
         jar = jar.replace("\\", "/");
         xml = xml.replace("\\", "/");
         String cmd = String.format("%s %s -c %s %n","bash", jar, xml);

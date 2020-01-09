@@ -47,12 +47,14 @@ public class TestScriptMaker {
         File script = new File(s.getToolsBaseDir()+"/"+s.CHECKSTYLE+"/"+MojoSettings.PRECOMMIT);
         String actual =  MojoSettings.getCommandToAdd(script);
         String expected = "bash "+script.getCanonicalPath();
-        expected = expected.replace("\\", "/") + "\n";
+        expected = expected.replace("\\", "/");
         assertEquals(expected, actual);
     }
     @Test
     public void getCheckstyleCommandToAdd() throws IOException {
+        String expected;
         String actual = MojoSettings.getCheckstyleCommandToAdd();
+        return;
     }
     @Test
     public void getCommandsPrecommit() throws IOException {
