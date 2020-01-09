@@ -53,10 +53,13 @@ public class GitHooksMgr {
      */
     public void updateHooks(List<String> tools, List<String> hookScripts) throws IOException {
         // Process hook files
+        // Working through the logic
         for (String hookScript: hookScripts) {
-            File script = new File(hookScript);
-            File gitHook = new File(this.settings.getHooksDir()+"/"+hookScript);
-            FileIO.addCommandToHooksFile(script, gitHook);
+            for (String tool:tools) {
+                File script = new File(this.settings.getHooksDir()+"/tools/"+tool+"/"+hookScript);
+                File gitHook = new File(this.settings.getHooksDir()+"/"+hookScript);
+                FileIO.addCommandToHooksFile(script, gitHook);
+            }
         }
     }
     /**
