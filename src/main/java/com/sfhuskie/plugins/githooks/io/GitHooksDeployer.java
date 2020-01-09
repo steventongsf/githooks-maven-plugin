@@ -58,9 +58,11 @@ public class GitHooksDeployer {
             File destDir = new File(this.settings.getToolsBaseDir().getCanonicalPath()+"/"+tool);
             scriptMaker.generateScripts(destDir);
         }
-        // TODO Process hook files
+        // Process hook files
         for (String hookScript: hookScripts) {
-//            FileIO.addCommandToHooksFile(srcFile, targetFile)
+            File script = new File(hookScript);
+            File gitHook = new File(this.settings.getHooksDir()+"/"+hookScript);
+            FileIO.addCommandToHooksFile(script, gitHook);
         }
     }
     /**
