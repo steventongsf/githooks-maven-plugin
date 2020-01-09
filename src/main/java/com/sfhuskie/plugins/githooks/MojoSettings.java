@@ -27,7 +27,7 @@ public class MojoSettings {
     public static final String HOOKS = PRECOMMIT+","+PREPUSH;
     public static final String CHECKSTYLE = "check-style";
     public static final String default_checkstyle_url = "https://github.com/checkstyle/checkstyle/releases/download/checkstyle-8.27/checkstyle-8.27-all.jar";
-    public static final String default_checkstyle_xml_url = "https://github.com/sfhuskie/tools-configurations/blob/master/checkstyle/java/whitespace.xml";
+    public static final String default_checkstyle_xml_url = "https://raw.githubusercontent.com/sfhuskie/tools-configurations/master/checkstyle/java/whitespace.xml";
     public static final File userDir = new File(System.getProperty("user.dir"));
     public static final String hooksRelativeDir = "/hooks";
     String gitMetadataFolder = ".git";
