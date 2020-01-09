@@ -26,7 +26,7 @@ import org.apache.maven.shared.utils.io.FileUtils;
 
 import com.sfhuskie.plugins.githooks.MojoSettings;
 
-public class GitHooksDeployer {
+public class GitHooksMgr {
     MojoSettings settings;
     File targetDir = null;
     Log logger;
@@ -34,7 +34,7 @@ public class GitHooksDeployer {
      * @param rootDir
      * @throws IOException
      */
-    public GitHooksDeployer(Log logger, File rootDir, File targetDir) throws IOException {
+    public GitHooksMgr(Log logger, File rootDir, File targetDir) throws IOException {
         this.logger = logger;
         this.targetDir = targetDir;
         this.settings = MojoSettings.getInstance();

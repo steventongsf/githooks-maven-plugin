@@ -43,16 +43,16 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 
-import com.sfhuskie.plugins.githooks.io.GitHooksDeployer;
+import com.sfhuskie.plugins.githooks.io.GitHooksMgr;
 
 @Mojo(name = "enable-checkstyle-hooks", defaultPhase = LifecyclePhase.COMPILE, requiresProject = true, threadSafe = true)
 public class CheckStyleHooksMojo	extends BaseMojo {
 
 	public void execute() throws MojoExecutionException, MojoFailureException{
 	    super.execute();
-	    GitHooksDeployer deployer;
+	    GitHooksMgr deployer;
         try {
-            deployer = new GitHooksDeployer(this.mavenLog, this.rootDirectory, this.targetDirectory);
+            deployer = new GitHooksMgr(this.mavenLog, this.rootDirectory, this.targetDirectory);
             deployer.deploy(this.tools, this.hooks );
         } 
         catch (IOException e) {

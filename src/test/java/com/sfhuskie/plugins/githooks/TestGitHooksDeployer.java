@@ -21,7 +21,7 @@ import java.io.File;
 import org.junit.Test;
 
 import com.sfhuskie.plugins.githooks.io.FileIO;
-import com.sfhuskie.plugins.githooks.io.GitHooksDeployer;
+import com.sfhuskie.plugins.githooks.io.GitHooksMgr;
 
 public class TestGitHooksDeployer {
     @Test
