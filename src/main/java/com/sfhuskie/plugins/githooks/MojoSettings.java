@@ -18,6 +18,7 @@ package com.sfhuskie.plugins.githooks;
  */
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import com.sfhuskie.plugins.githooks.io.GitFolderFinder;
 
@@ -30,11 +31,17 @@ public class MojoSettings {
     public static final String default_checkstyle_xml_url = "https://raw.githubusercontent.com/sfhuskie/tools-configurations/master/checkstyle/java/whitespace.xml";
     public static final File userDir = new File(System.getProperty("user.dir"));
     public static final String hooksRelativeDir = "/hooks";
+    public static final String checkstyleJar = "checkstyle.jar";
+    public static final String checkstyleXml = "whitespace.xml";
     String gitMetadataFolder = ".git";
     File gitDir;
     File hooksDir;
     File rootDir;
     File toolsBaseDir;
+    List<String> hooks;
+    List<String> tools;
+    String checkstyle_url = default_checkstyle_url;
+    String checkstyle_xml_url = default_checkstyle_xml_url;
 
     static MojoSettings mojoSettings = null;
     
@@ -71,15 +78,65 @@ public class MojoSettings {
     public File getToolsBaseDir() {
         return toolsBaseDir;
     }
+    
+    public List<String> getHooks() {
+        return hooks;
+    }
+
+    public void setHooks(List<String> hooks) {
+        this.hooks = hooks;
+    }
+
+    public List<String> getTools() {
+        return tools;
+    }
+
+    public void setTools(List<String> tools) {
+        this.tools = tools;
+    }
+
+    public String getCheckstyleUrl() {
+        return checkstyle_url;
+    }
+
+    public void setCheckstyleUrl(String checkstyle_url) {
+        this.checkstyle_url = checkstyle_url;
+    }
+
+    public String getCheckstyleXmlUrl() {
+        return checkstyle_xml_url;
+    }
+
+    public void setCheckstyleXmlUrl(String checkstyle_xml_url) {
+        this.checkstyle_xml_url = checkstyle_xml_url;
+    }
+
     /**
-     * @param file
+     * @param file  Script path name to execute from hook script
      * @return
      * @throws IOException
      */
     public static String getCommandToAdd(File file) throws IOException {
         MojoSettings s = new MojoSettings();
         // TODO Add argument for configuration file
-        return "bash "+file.getCanonicalPath();
+        String script = s.getHooksDir()+"/"+file.getName();
+        script = script.replace("\\", "/");
+        String cmd = String.format("%s %s %n","bash", script);
+        return cmd;
     }
-
+    /**
+     * @param file  Script path name to execute from hook script
+     * @return
+     * @throws IOException
+     */
+    public static String getCheckstyleCommandToAdd() throws IOException {
+        MojoSettings s = new MojoSettings();
+        // TODO Add argument for configuration file
+        String jar = s.getHooksDir()+"/"+checkstyleJar;
+        String xml = s.getHooksDir()+"/"+checkstyleXml;
+        jar = jar.replace("\\", "/");
+        xml = xml.replace("\\", "/");
+        String cmd = String.format("%s %s -c %s %n","bash", jar, xml);
+        return cmd;
+    }
 }
