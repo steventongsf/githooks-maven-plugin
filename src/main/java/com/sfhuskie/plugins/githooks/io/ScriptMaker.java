@@ -48,7 +48,7 @@ public class ScriptMaker {
             for (String line: javaCheck) {
                 commands.add(line);
             }
-            commands.add(getCommandToAdd(script));
+            commands.add(MojoSettings.getCommandToAdd(script));
             return commands;
         }
         else {
@@ -59,14 +59,12 @@ public class ScriptMaker {
      * @param destDir       Directory to write files to
      * @throws IOException
      */
-    public void generate(File destDir) throws IOException {
+    public void generateScripts(File destDir) throws IOException {
         if (this.hooks.contains(MojoSettings.PRECOMMIT)) {
-            // TODO Write file
             File precommit = new File(destDir.getAbsolutePath()+"/"+MojoSettings.PRECOMMIT);
             createScript(precommit, destDir);
         }
         if (this.hooks.contains(MojoSettings.PREPUSH)) {
-            // TODO Write file
             File prepush = new File(destDir.getAbsolutePath()+"/"+MojoSettings.PREPUSH);
             createScript(prepush, destDir);
         }
@@ -78,13 +76,5 @@ public class ScriptMaker {
         if (!script.canExecute()) {
             script.setExecutable(true);
         }
-    }
-    /**
-     * @param file
-     * @return
-     * @throws IOException
-     */
-    public static String getCommandToAdd(File file) throws IOException {
-        return "bash "+file.getCanonicalPath();
     }
 }
