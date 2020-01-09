@@ -34,8 +34,8 @@
 			     </execution>
                  <execution>
                      <id>deploy</id>
-                     <phase>validate</phase>
-                     <goals><goal>deploy</goal></goals>
+                     <phase>initialize</phase>
+                     <goals><goal>update-hooks-scripts</goal></goals>
                      <configuration>
                      </configuration>
                  </execution>			  
