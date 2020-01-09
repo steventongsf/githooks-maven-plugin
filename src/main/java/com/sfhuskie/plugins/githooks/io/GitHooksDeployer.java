@@ -28,10 +28,7 @@ import com.sfhuskie.plugins.githooks.MojoSettings;
 
 public class GitHooksDeployer {
     MojoSettings settings;
-    File gitDir = null;
-    File hooksDir = null;
     File targetDir = null;
-    String gitMetadataFolder = ".git";
     Log logger;
     /**
      * @param rootDir
@@ -41,35 +38,29 @@ public class GitHooksDeployer {
         this.logger = logger;
         this.targetDir = targetDir;
         this.settings = new MojoSettings();
-        gitDir = new File(rootDir+"/"+this.gitMetadataFolder);
-        hooksDir = new File(gitDir.getCanonicalPath()+this.settings.hooksRelativeDir);
-        if (!gitDir.exists()) {
-            // Find git directory. If not found, an exception is thrown
-            GitFolderFinder gff = new GitFolderFinder(new File(rootDir.getAbsolutePath()));
-            gitDir =  gff.find();
-            hooksDir = new File(gitDir.getCanonicalPath()+this.settings.hooksRelativeDir);
-        }
-        logger.info("gitDir: "+gitDir.getAbsolutePath());
-        logger.info("hooksDir: "+hooksDir.getAbsolutePath());
+        logger.info("gitDir: "+this.settings.getGitDir().getAbsolutePath());
+        logger.info("hooksDir: "+this.settings.getHooksDir().getAbsolutePath());
 
     }
     /**
      * @param s
      */
     public void overrideGitMetadataFolder(String s) {
-        this.gitMetadataFolder = s;
+        this.settings.overrideGitMetadataFolder(s);
     }
     /**
      * @throws IOException
      */
-    public void deploy(List<String> tools, List<String> hooks) throws IOException {
+    public void deploy(List<String> tools, List<String> hookScripts) throws IOException {
         // Generate scripts
-        ScriptMaker maker = new ScriptMaker(tools, hooks);
-        File destDir = new File(this.targetDir.getAbsolutePath()+"/bin");
-        maker.generate(destDir);
+        ScriptMaker scriptMaker = new ScriptMaker(tools, hookScripts);
+        for (String tool:tools) {
+            File destDir = new File(this.settings.getToolsBaseDir().getCanonicalPath()+"/"+tool);
+            scriptMaker.generateScripts(destDir);
+        }
         // TODO Process hook files
-        for (String hook: hooks) {
-            
+        for (String hookScript: hookScripts) {
+//            FileIO.addCommandToHooksFile(srcFile, targetFile)
         }
     }
     /**
@@ -77,7 +68,7 @@ public class GitHooksDeployer {
      * @throws IOException
      */
     public void processHookFile(File srcFile) throws IOException {
-        File targetFile = new File(this.hooksDir.getCanonicalPath()+"/"+srcFile.getName());
+        File targetFile = new File(settings.getHooksDir().getCanonicalPath()+"/"+srcFile.getName());
         // source exist in target?
         this.logger.info("Deploying to "+targetFile.getAbsolutePath());
         FileIO.addCommandToHooksFile(srcFile, targetFile);
