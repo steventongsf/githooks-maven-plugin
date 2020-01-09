@@ -42,10 +42,10 @@ abstract class BaseMojo extends AbstractMojo {
     protected String checkstyleXmlUrl;
 
     @Parameter(defaultValue = MojoSettings.HOOKS, property = "hooks", required = true)
-    protected List hooks;
+    protected List<String> hooks;
 
     @Parameter(defaultValue = MojoSettings.CHECKSTYLE, property = "tools", required = true)
-    protected List tools;
+    protected List<String> tools;
 
     
    public void execute() throws MojoExecutionException, MojoFailureException {
