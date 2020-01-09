@@ -202,4 +202,15 @@ public class TestFileIO {
         assertTrue(jarFile.exists());
         FileUtils.forceDelete(jarFile);
     }
+    @Test
+    public void downloadXml() throws MalformedURLException, IOException {
+        String url = MojoSettings.default_checkstyle_xml_url;
+        String xml = MojoSettings.userDir+"/tmp/whitespace.xml";
+        File file = new File(xml);
+        if (file.exists()) {
+            FileUtils.forceDelete(file);
+        }
+        FileIO.download(url, xml);
+        assertTrue(file.exists());
+    }
 }
