@@ -54,15 +54,15 @@ public class InstallCheckStyleMojo	extends BaseMojo {
 	public void execute() throws MojoExecutionException, MojoFailureException {
 	    super.execute();
         try {
-            String jarUrl = this.checkstyleUrl;
-            String xmlUrl = this.checkstyleXmlUrl;
             MojoSettings settings = MojoSettings.getInstance();
+            settings.setCheckstyleUrl(this.checkstyleUrl);
+            settings.setCheckstyleXmlUrl(this.checkstyleXmlUrl);
             String targetDir = settings.getToolsBaseDir().getCanonicalPath()+"/"+MojoSettings.CHECKSTYLE;
             File jarFile = new File(targetDir+"/checkstyle.jar");
-            String xmlFile = targetDir+"/whitespace.xml";
-            FileIO.downloadJar(jarUrl, jarFile);
+            String xmlFile = targetDir+"/"+(new File(settings.getCheckstyleXmlUrl())).getName();
+            FileIO.downloadJar(settings.getCheckstyleUrl(), jarFile);
             mavenLog.info("Downloaded "+jarFile.getAbsolutePath());
-            FileIO.download(xmlUrl, xmlFile);
+            FileIO.download(settings.getCheckstyleXmlUrl(), xmlFile);
             mavenLog.info("Downloaded "+xmlFile);
             // Generate scripts
             ScriptMaker scriptMaker = new ScriptMaker(tools, hooks);
