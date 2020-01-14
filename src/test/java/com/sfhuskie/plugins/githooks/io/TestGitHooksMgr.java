@@ -34,6 +34,6 @@ public class TestGitHooksMgr {
         tools.add(MojoSettings.CHECKSTYLE);
         List<String> hookScripts = new ArrayList<String>();
         hookScripts.add(MojoSettings.PRECOMMIT);
-        mgr.updateHooks(tools, hookScripts);
+        //mgr.updateHooks(tools, hookScripts);
     }
 }
