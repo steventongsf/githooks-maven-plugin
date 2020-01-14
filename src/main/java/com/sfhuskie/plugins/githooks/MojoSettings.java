@@ -57,11 +57,15 @@ public class MojoSettings {
     private MojoSettings() throws IOException {
     }
     /**
-     * @param s
+     * @param s alternate name of .git folder
      */
     public void overrideGitMetadataFolder(String s) {
         this.gitMetadataFolder = s;
     }
+    /**
+     * @return File instance of the git metadata path
+     * @throws IOException  file issue
+     */
     public File getGitDir() throws IOException {
         this.initGitDirs();
         return gitDir;
