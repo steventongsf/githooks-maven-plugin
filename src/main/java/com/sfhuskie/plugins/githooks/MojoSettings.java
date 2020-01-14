@@ -126,8 +126,8 @@ public class MojoSettings {
 
     /**  Create command to add to actual script that is executed by the git hook script
      * @param script  Script path name 
-     * @return
-     * @throws IOException
+     * @return  String  command string
+     * @throws IOException  file issue
      */
     public static String getCommandToCallScript(File script) throws IOException {
         MojoSettings s = new MojoSettings();
@@ -139,8 +139,8 @@ public class MojoSettings {
     }
     /** Create command for adding to deployed git hook script
      * @param file  Script path name to execute from hook script
-     * @return
-     * @throws IOException
+     * @return String       command string
+     * @throws IOException  file issue
      */
     public static String getCheckstyleCommandToAdd() throws IOException {
         MojoSettings s = new MojoSettings();
