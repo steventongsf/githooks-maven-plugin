@@ -45,7 +45,7 @@ public class GitHooksMgr {
 
     }
     /**  Used to override metadata name for testing.
-     * @param s
+     * @param s name of alternate directory
      */
     protected void overrideGitMetadataFolder(String s) {
         this.settings.overrideGitMetadataFolder(s);

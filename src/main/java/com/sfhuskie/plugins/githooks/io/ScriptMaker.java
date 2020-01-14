@@ -34,16 +34,16 @@ public class ScriptMaker {
     List<String> tools;
     List<String> hooks;
     /**
-     * @param tools
-     * @param hooks
+     * @param tools list of tools
+     * @param hooks list of hooks
      */
     public ScriptMaker(List<String> tools, List<String> hooks) {
         this.tools = tools;
         this.hooks = hooks;
     }
     /**
-     * @return
-     * @throws IOException
+     * @return  List of lines
+     * @throws IOException  i/o exception
      */
     public List<String> getCommands(File script) throws IOException {
         // Checkstyle configured so get commands for checkstyle
@@ -60,7 +60,7 @@ public class ScriptMaker {
     }
     /** Write scripts based on the values in the hooks attribute
      * @param destDir       Directory to write files to
-     * @throws IOException
+     * @throws IOException  i/o exception
      */
     public void generateScripts(File destDir) throws IOException {
         if (this.hooks.contains(MojoSettings.PRECOMMIT)) {
