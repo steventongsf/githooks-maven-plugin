@@ -55,7 +55,6 @@ public class FileIO {
     /** Read lines from file into a List
      * @param f         File instance to get lines from
      * @return List     List of strings
-     * @throws MojoExecutionException  Failure to read file
      */
     public static List<String> getLines(File f) throws IOException {
         return FileUtils.readLines(f, encoding);
