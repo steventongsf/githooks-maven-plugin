@@ -52,7 +52,7 @@ import java.io.InputStream;
  */
 public class FileIO {
     public static String encoding = "UTF-8";
-    /**
+    /** Read lines from file into a List
      * @param f         File instance to get lines from
      * @return List     List of strings
      * @throws MojoExecutionException  Failure to read file
@@ -60,7 +60,7 @@ public class FileIO {
     public static List<String> getLines(File f) throws IOException {
         return FileUtils.readLines(f, encoding);
     }
-    /**
+    /** Write List of lines to a file
      * @param file
      * @param lines
      * @throws IOException
@@ -68,14 +68,14 @@ public class FileIO {
     public static void writeLines(File file, List<String> lines) throws IOException {
         FileUtils.writeLines(file, encoding, lines);
     }
-    /**
+    /**  Append command to call external script to target script (git hooks script)
      * @param srcFile
      * @param targetFile
      * @return  boolean If successful.
      * @throws IOException 
      */
     public static boolean addCommandToHooksFile(File srcFile, File targetFile) throws IOException {
-        String newLine = MojoSettings.getCommandToAdd(srcFile);
+        String newLine = MojoSettings.getCommandToCallScript(srcFile);
 
         if (targetFile.exists()) {
             // add command
@@ -98,10 +98,10 @@ public class FileIO {
         List<String> lines = new ArrayList<String>();
         lines.add("#!/bin/sh");
         lines.add("");
-        lines.add(MojoSettings.getCommandToAdd(script));
+        lines.add(MojoSettings.getCommandToCallScript(script));
         return lines;
     }
-    /**
+    /**  
      * @param script
      * @param out
      * @throws IOException
@@ -110,7 +110,7 @@ public class FileIO {
         List<String> lines = getInitialScriptLines(script);
         FileIO.writeLines(out,  lines);
     }
-    /**
+    /** Add command to 2nd line in List
      * @param newLine
      * @param target
      * @return
@@ -149,12 +149,12 @@ public class FileIO {
                 timeout, 
                 timeout);
     }
-    /**
+    /** Read named file template found in path.  
      * @param fileName
      * @return
      * @throws IOException
      */
-    public static List<String> readFileFromPath(String fileName) throws IOException {
+    public static List<String> readFileTemplateFromPath(String fileName) throws IOException {
         List<String> lines = new ArrayList<String>();
         InputStream is = (InputStream) FileIO.class.getResourceAsStream("/templates/"+fileName);
         BufferedReader br = new BufferedReader(new InputStreamReader(is));

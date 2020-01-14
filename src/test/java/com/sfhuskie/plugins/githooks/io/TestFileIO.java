@@ -42,12 +42,12 @@ public class TestFileIO {
     public void before() throws IOException {
         settings = MojoSettings.getInstance();
     }
-    /**
+    /** Test script containing java configuration validation
      * @throws Exception
      */
     @Test 
-    public void readDeployedPreCommitFile() throws Exception {
-        List<String> lines = FileIO.readFileFromPath("java-check");
+    public void readFileTemplateFromPath() throws Exception {
+        List<String> lines = FileIO.readFileTemplateFromPath("java-check");
         assertTrue(lines.size() > 0);
     }
     /**
@@ -69,15 +69,16 @@ public class TestFileIO {
      */
     @Test 
     public void deployFile() throws IOException {
-        
+        // test with local file under target directory
         File targetFile = new File(targetDir.getCanonicalPath()+"/pre-commit");
-        if (targetFile.exists()) {
-            FileUtils.forceDelete(targetFile);
+        // delete file
+        if (this.scriptFile.exists()) {
+            FileUtils.forceDelete(this.scriptFile);
         }
-        targetFile = new File(targetDir.getCanonicalPath()+"/pre-commit");
-        FileIO.addCommandToHooksFile(this.scriptFile, targetFile);
+        
+        FileIO.addCommandToHooksFile(this.scriptFile, this.scriptFile);
         List<String> expected = FileIO.getInitialScriptLines(this.scriptFile);
-        List<String> actual = FileIO.getLines(targetFile);
+        List<String> actual = FileIO.getLines(this.scriptFile);
         assertEquals(expected,actual);
     }
     /**
@@ -130,7 +131,7 @@ public class TestFileIO {
         File targetFile = new File(targetDir.getCanonicalPath()+"/pre-commit");
 
         // Command line to add
-        String newLine = MojoSettings.getCommandToAdd(scriptFile);
+        String newLine = MojoSettings.getCommandToCallScript(scriptFile);
 
         // Create initial target file
         List<String> targetLines = new ArrayList<String>();
@@ -163,7 +164,7 @@ public class TestFileIO {
         File targetFile = new File(targetDir.getCanonicalPath()+"/pre-commit");
 
         // Command line to add
-        String newLine = MojoSettings.getCommandToAdd(scriptFile);
+        String newLine = MojoSettings.getCommandToCallScript(scriptFile);
 
         // Create initial target file
         List<String> targetLines = new ArrayList<String>();
@@ -188,19 +189,15 @@ public class TestFileIO {
     }
     @Test
     public void testReadFileFromStream() throws Exception {
-        List<String> actual = FileIO.readFileFromPath("java-check");
+        List<String> actual = FileIO.readFileTemplateFromPath("java-check");
         assertEquals(FileIO.getLines(new File("src/main/resources/templates/java-check")), actual);
     }
     @Test
     public void downloadJar() throws MalformedURLException, IOException {
         String url = MojoSettings.default_checkstyle_url;
         File jarFile = new File(MojoSettings.userDir+"/tmp/downloadJarTest.jar");
-        if (jarFile.exists()) {
-            FileUtils.forceDelete(jarFile);
-        }
         FileIO.downloadJar(url, jarFile);
         assertTrue(jarFile.exists());
-        FileUtils.forceDelete(jarFile);
     }
     @Test
     public void downloadXml() throws MalformedURLException, IOException {
