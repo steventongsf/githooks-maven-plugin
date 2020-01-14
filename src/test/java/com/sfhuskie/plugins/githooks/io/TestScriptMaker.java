@@ -41,30 +41,16 @@ public class TestScriptMaker {
         tools = new ArrayList<String>();
         tools.add(MojoSettings.CHECKSTYLE);
     }
+
     @Test
-    public void getCommandToAdd() throws IOException {
-        MojoSettings s = MojoSettings.getInstance();
-        File script = new File(s.getToolsBaseDir()+"/"+s.CHECKSTYLE+"/"+MojoSettings.PRECOMMIT);
-        String actual =  MojoSettings.getCommandToAdd(script);
-        String expected = "bash "+script.getCanonicalPath();
-        expected = expected.replace("\\", "/");
-        assertEquals(expected, actual);
-    }
-    @Test
-    public void getCheckstyleCommandToAdd() throws IOException {
-        String expected;
-        String actual = MojoSettings.getCheckstyleCommandToAdd();
-        return;
-    }
-    @Test
-    public void getCommandsPrecommit() throws IOException {
+    public void getCheckstyleCommandsForPrecommit() throws IOException {
         MojoSettings s = MojoSettings.getInstance();
         hooks.add(MojoSettings.PRECOMMIT);
         ScriptMaker sm = new ScriptMaker(tools, hooks);
         File precommit = new File(s.getToolsBaseDir()+"/"+s.CHECKSTYLE+"/"+MojoSettings.PRECOMMIT);
         File prepush = new File(s.getHooksDir()+"/"+MojoSettings.PREPUSH);
         List<String> cmds = sm.getCommands(precommit);
-        //assertTrue(cmds.contains(MojoSettings.getCommandToAdd(precommit)));
+        assertTrue(cmds.contains(MojoSettings.getCheckstyleCommandToAdd()));
         assertTrue(cmds.get(0).equals("#!/bin/sh"));
         assertTrue(!cmds.contains(prepush.getAbsolutePath()));
     }

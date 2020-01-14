@@ -26,6 +26,10 @@ import org.apache.maven.shared.utils.io.FileUtils;
 
 import com.sfhuskie.plugins.githooks.MojoSettings;
 
+/**  Create standalone executable scripts
+ * @author Steven Tong
+ *
+ */
 public class ScriptMaker {
     List<String> tools;
     List<String> hooks;
@@ -42,20 +46,19 @@ public class ScriptMaker {
      * @throws IOException
      */
     public List<String> getCommands(File script) throws IOException {
+        // Checkstyle configured so get commands for checkstyle
         if (this.tools.contains(MojoSettings.CHECKSTYLE)) {
             List<String> commands = new ArrayList<String>();
-            List<String> javaCheck = FileIO.readFileFromPath("java-check");
+            List<String> javaCheck = FileIO.readFileTemplateFromPath("java-check");
             for (String line: javaCheck) {
                 commands.add(line);
             }
             commands.add(MojoSettings.getCheckstyleCommandToAdd());
             return commands;
         }
-        else {
-            throw new RuntimeException("Tool not supported.");
-        }
+        throw new RuntimeException("Tool not supported.");
     }
-    /**
+    /** Write scripts based on the values in the hooks attribute
      * @param destDir       Directory to write files to
      * @throws IOException
      */
