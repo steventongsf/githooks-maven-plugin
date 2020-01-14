@@ -52,7 +52,7 @@ public class CheckStyleHooksMojo	extends BaseMojo {
 	    super.execute();
 	    GitHooksMgr gitHooksMgr;
         try {
-            gitHooksMgr = new GitHooksMgr(this.mavenLog, this.targetDirectory);
+            gitHooksMgr = new GitHooksMgr(this.mavenLog);
             gitHooksMgr.updateHooks(this.tools, this.hooks );
         } 
         catch (IOException e) {
