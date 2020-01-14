@@ -138,7 +138,6 @@ public class MojoSettings {
         return cmd;
     }
     /** Create command for adding to deployed git hook script
-     * @param file  Script path name to execute from hook script
      * @return String       command string
      * @throws IOException  file issue
      */

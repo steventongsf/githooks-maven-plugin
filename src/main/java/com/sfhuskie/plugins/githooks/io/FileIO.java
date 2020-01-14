@@ -91,7 +91,7 @@ public class FileIO {
     }
     /**
      * @param script script path name create command
-     * @return
+     * @return List         list of lines
      * @throws IOException  error creating file object
      */
     public static List<String> getInitialScriptLines(File script) throws IOException {
@@ -113,7 +113,7 @@ public class FileIO {
     /** Add command to 2nd line in List
      * @param newLine   line to add
      * @param target    file to write to
-     * @return
+     * @return List         list of lines
      */
     public static List<String> addCommand(String newLine,List<String> target) {
         if (!doesFileContainLine(target, newLine)) {
@@ -124,7 +124,7 @@ public class FileIO {
     /**
      * @param lines         List of lines
      * @param searchString  search term
-     * @return
+     * @return List         list of lines
      */
     public static boolean doesFileContainLine(List<String> lines, String searchString) {
         for (String line:lines) {
