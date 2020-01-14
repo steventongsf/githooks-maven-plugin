@@ -72,9 +72,9 @@ public class GitFolderFinder {
         }
         return true;
     }
-    /** Check to see if <path>/.git exists
-     * @param folder
-     * @return
+    /** Check to see if .git path exists
+     * @param folder    folder instance to verify
+     * @return boolean  true or false
      */
     public boolean doesGitFolderExist(File folder) {
         List<File> files = Arrays.asList(folder.listFiles());

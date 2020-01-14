@@ -34,8 +34,8 @@ public class GitHooksMgr {
     MojoSettings settings;
     Log logger;
     /**
-     * @param rootDir
-     * @throws IOException
+     * @param logger        instance of the logger
+     * @throws IOException  file exception
      */
     public GitHooksMgr(Log logger) throws IOException {
         this.logger = logger;
@@ -51,7 +51,7 @@ public class GitHooksMgr {
         this.settings.overrideGitMetadataFolder(s);
     }
     /**
-     * @throws IOException
+     * @throws IOException  file exception
      */
     public void updateHooks(List<String> tools, List<String> hookScripts) throws IOException {
         // Process hook files
