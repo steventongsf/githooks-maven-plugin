@@ -26,20 +26,22 @@ import org.apache.maven.shared.utils.io.FileUtils;
 
 import com.sfhuskie.plugins.githooks.MojoSettings;
 
+/**  Manage git hook scripts located in the folder .git/hooks
+ * @author Steven Tong
+ *
+ */
 public class GitHooksMgr {
     MojoSettings settings;
-    File targetDir = null;
     Log logger;
     /**
      * @param rootDir
      * @throws IOException
      */
-    public GitHooksMgr(Log logger, File targetDir) throws IOException {
+    public GitHooksMgr(Log logger) throws IOException {
         this.logger = logger;
-        this.targetDir = targetDir;
         this.settings = MojoSettings.getInstance();
-        logger.info("gitDir: "+this.settings.getGitDir().getAbsolutePath());
-        logger.info("hooksDir: "+this.settings.getHooksDir().getAbsolutePath());
+        info("gitDir: "+this.settings.getGitDir().getAbsolutePath());
+        info("hooksDir: "+this.settings.getHooksDir().getAbsolutePath());
 
     }
     /**  Used to override metadata name for testing.
@@ -56,26 +58,28 @@ public class GitHooksMgr {
         // Working through the logic
         for (String hookScript: hookScripts) {
             for (String tool:tools) {
+                // Location of script to execute
                 File script = new File(this.settings.getHooksDir()+"/tools/"+tool+"/"+hookScript);
-                File gitHook = new File(this.settings.getHooksDir()+"/"+hookScript);
-                FileIO.addCommandToHooksFile(script, gitHook);
+                // Location of .git/hooks/<script>
+                File gitHookScript = new File(this.settings.getHooksDir()+"/"+hookScript);
+                // Write to .git/hooks/<script>
+                FileIO.addCommandToHooksFile(script, gitHookScript);
+                // make executable
+                if (!script.canExecute()) {
+                    script.setExecutable(true);
+                }
+                if (!gitHookScript.canExecute()) {
+                    gitHookScript.setExecutable(true);
+                }
             }
         }
     }
-    /**
-     * @param srcFile
-     * @throws IOException
-     */
-    public void processHookFile(File srcFile) throws IOException {
-        File targetFile = new File(settings.getHooksDir().getCanonicalPath()+"/"+srcFile.getName());
-        // source exist in target?
-        this.logger.info("Deploying to "+targetFile.getAbsolutePath());
-        FileIO.addCommandToHooksFile(srcFile, targetFile);
-        
-        targetFile = new File(targetFile.getCanonicalPath());
-        // make executable
-        if (!targetFile.canExecute()) {
-            targetFile.setExecutable(true);
+    public void info(String m) {
+        if (this.logger  == null) {
+            System.out.println(m);
+        }
+        else {
+            this.logger.info(m);
         }
     }
 }
