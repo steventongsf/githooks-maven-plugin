@@ -68,6 +68,8 @@ public class TestGitFolderFinder {
             FileUtils.forceMkdir(dir);
         }
         gff.overrideSearchFolder(".git.bak");
-        assertEquals(new File(targetDir.getCanonicalFile()+"/folderX/.git.bak"),gff.find());
+        File expected = new File(targetDir.getCanonicalFile()+"/folderX/.git.bak");
+        File actual = gff.find();
+        assertEquals(expected,actual);
     }
 }

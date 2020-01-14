@@ -37,7 +37,6 @@ public class GitFolderFinder {
         this.subFolderNames.put("refs",false);
         this.subFolderNames.put("objects",false);
         this.subFolderNames.put("info",false);
-        this.subFolderNames.put("logs",false);
     }
     
     public Map<String, Boolean> getSubFolderNames() {
@@ -52,6 +51,9 @@ public class GitFolderFinder {
         this.searchFolder = s;
     }
     public boolean isValidGitDir(File dir) {
+        if (!dir.exists()) {
+            return false;
+        }
         List<File> entries = Arrays.asList(dir.listFiles());
         for (File entry:entries) {
             if (entry.isDirectory()) {
@@ -70,6 +72,10 @@ public class GitFolderFinder {
         }
         return true;
     }
+    /** Check to see if <path>/.git exists
+     * @param folder
+     * @return
+     */
     public boolean doesGitFolderExist(File folder) {
         List<File> files = Arrays.asList(folder.listFiles());
         for (File file:files) {
@@ -83,17 +89,17 @@ public class GitFolderFinder {
         return new File(basePath.getCanonicalPath()+"/"+this.searchFolder);
     }
     public File find() throws IOException {
-        if (this.doesGitFolderExist(this.initialDir) 
-                && this.isValidGitDir(getGitPath(initialDir))) {
-            return getGitPath(initialDir);
+        File gitPath = getGitPath(initialDir);
+        if (this.isValidGitDir(gitPath)) {
+            return gitPath;
         }
         String path = this.initialDir.getAbsolutePath();
         for (int i = 0; i < this.depth; i++) {
             path =  path + "/..";
             File dir = new File(path);
-            if (this.doesGitFolderExist(dir) 
-                    && this.isValidGitDir(getGitPath(dir))) {
-                return getGitPath(dir);
+            gitPath = getGitPath(dir);
+            if (this.isValidGitDir(gitPath)) {
+                return gitPath;
             }
         }
         throw new RuntimeException("Unable to find git directory in any parent folder.");
