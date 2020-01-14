@@ -18,6 +18,7 @@ package com.sfhuskie.plugins.githooks;
  */
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import com.sfhuskie.plugins.githooks.io.GitFolderFinder;
@@ -27,6 +28,7 @@ public class MojoSettings {
     public static final String PREPUSH = "pre-push";
     public static final String HOOKS = PRECOMMIT+","+PREPUSH;
     public static final String CHECKSTYLE = "check-style";
+    public static final String TOOLS = CHECKSTYLE;
     public static final String default_checkstyle_url = "https://github.com/checkstyle/checkstyle/releases/download/checkstyle-8.27/checkstyle-8.27-all.jar";
     public static final String default_checkstyle_xml_url = "https://raw.githubusercontent.com/sfhuskie/tools-configurations/master/checkstyle/java/whitespace.xml";
     public static final File userDir = new File(System.getProperty("user.dir"));
@@ -34,12 +36,12 @@ public class MojoSettings {
     public static final String checkstyleJar = "checkstyle.jar";
     public static final String checkstyleXml = "whitespace.xml";
     String gitMetadataFolder = ".git";
-    File gitDir;
+    File gitDir = null;
     File hooksDir;
     File rootDir;
     File toolsBaseDir;
-    List<String> hooks;
-    List<String> tools;
+    List<String> hooksList = Arrays.asList(HOOKS.split(","));
+    List<String> tools = Arrays.asList(TOOLS.split(","));
     String checkstyle_url = default_checkstyle_url;
     String checkstyle_xml_url = default_checkstyle_xml_url;
 
@@ -53,15 +55,6 @@ public class MojoSettings {
     }
     
     private MojoSettings() throws IOException {
-        gitDir = new File(rootDir+"/"+this.gitMetadataFolder);
-        hooksDir = new File(gitDir.getCanonicalPath()+"/"+this.hooksRelativeDir);
-        if (!gitDir.exists()) {
-            // Find git directory. If not found, an exception is thrown
-            GitFolderFinder gff = new GitFolderFinder(new File(userDir.getAbsolutePath()));
-            this.gitDir =  gff.find();
-            this.hooksDir = new File(gitDir.getCanonicalPath()+hooksRelativeDir);
-        }
-        this.toolsBaseDir = new File(this.getHooksDir().getCanonicalPath()+"/tools");
     }
     /**
      * @param s
@@ -69,22 +62,38 @@ public class MojoSettings {
     public void overrideGitMetadataFolder(String s) {
         this.gitMetadataFolder = s;
     }
-    public File getGitDir() {
+    public File getGitDir() throws IOException {
+        this.initGitDirs();
         return gitDir;
     }
-    public File getHooksDir() {
+    protected void initGitDirs() throws IOException {
+        if (this.gitDir == null) {
+            gitDir = new File(rootDir+"/"+this.gitMetadataFolder);
+            hooksDir = new File(gitDir.getCanonicalPath()+"/"+this.hooksRelativeDir);
+            if (!gitDir.exists()) {
+                // Find git directory. If not found, an exception is thrown
+                GitFolderFinder gff = new GitFolderFinder(new File(userDir.getAbsolutePath()));
+                this.gitDir =  gff.find();
+                this.hooksDir = new File(gitDir.getCanonicalPath()+hooksRelativeDir);
+            }
+            this.toolsBaseDir = new File(this.getHooksDir().getCanonicalPath()+"/tools");
+        }
+    }
+    public File getHooksDir() throws IOException {
+        this.initGitDirs();
         return hooksDir;
     }
-    public File getToolsBaseDir() {
+    public File getToolsBaseDir() throws IOException {
+        this.initGitDirs();
         return toolsBaseDir;
     }
     
     public List<String> getHooks() {
-        return hooks;
+        return this.hooksList;
     }
 
     public void setHooks(List<String> hooks) {
-        this.hooks = hooks;
+        this.hooksList = hooks;
     }
 
     public List<String> getTools() {
@@ -111,32 +120,32 @@ public class MojoSettings {
         this.checkstyle_xml_url = checkstyle_xml_url;
     }
 
-    /**
-     * @param file  Script path name to execute from hook script
+    /**  Create command to add to actual script that is executed by the git hook script
+     * @param script  Script path name 
      * @return
      * @throws IOException
      */
-    public static String getCommandToAdd(File file) throws IOException {
+    public static String getCommandToCallScript(File script) throws IOException {
         MojoSettings s = new MojoSettings();
         // TODO Add argument for configuration file
-        String script = file.getCanonicalPath();
-        script = script.replace("\\", "/");
-        String cmd = String.format("%s %s","bash", script);
+        String scriptPath = script.getCanonicalPath();
+        scriptPath = scriptPath.replace("\\", "/");
+        String cmd = String.format("%s %s","bash", scriptPath);
         return cmd;
     }
-    /**
+    /** Create command for adding to deployed git hook script
      * @param file  Script path name to execute from hook script
      * @return
      * @throws IOException
      */
     public static String getCheckstyleCommandToAdd() throws IOException {
         MojoSettings s = new MojoSettings();
-        // TODO Add argument for configuration file
-        String jar = s.getHooksDir()+"/"+s.CHECKSTYLE+"/"+checkstyleJar;
-        String xml = s.getHooksDir()+"/"+s.CHECKSTYLE+"/"+checkstyleXml;
+        // Add argument for configuration file
+        String jar = s.getHooksDir()+"/tools/"+s.CHECKSTYLE+"/"+checkstyleJar;
+        String xml = s.getHooksDir()+"/tools/"+s.CHECKSTYLE+"/"+checkstyleXml;
         jar = jar.replace("\\", "/");
         xml = xml.replace("\\", "/");
-        String cmd = String.format("%s %s -c %s .","bash", jar, xml);
+        String cmd = String.format("$JAVACMD -jar %s -c %s .",jar, xml);
         return cmd;
     }
 }
