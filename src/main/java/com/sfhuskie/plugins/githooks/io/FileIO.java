@@ -61,18 +61,18 @@ public class FileIO {
         return FileUtils.readLines(f, encoding);
     }
     /** Write List of lines to a file
-     * @param file
-     * @param lines
-     * @throws IOException
+     * @param file  output file
+     * @param lines List of lines to write
+     * @throws IOException  file io issue
      */
     public static void writeLines(File file, List<String> lines) throws IOException {
         FileUtils.writeLines(file, encoding, lines);
     }
     /**  Append command to call external script to target script (git hooks script)
-     * @param srcFile
-     * @param targetFile
-     * @return  boolean If successful.
-     * @throws IOException 
+     * @param srcFile       template file
+     * @param targetFile    target file to append to
+     * @return  boolean     If successful.
+     * @throws IOException  file read write issue
      */
     public static boolean addCommandToHooksFile(File srcFile, File targetFile) throws IOException {
         String newLine = MojoSettings.getCommandToCallScript(srcFile);
@@ -90,9 +90,9 @@ public class FileIO {
         return true;
     }
     /**
-     * @param script
+     * @param script script path name create command
      * @return
-     * @throws IOException
+     * @throws IOException  error creating file object
      */
     public static List<String> getInitialScriptLines(File script) throws IOException {
         List<String> lines = new ArrayList<String>();
@@ -102,17 +102,17 @@ public class FileIO {
         return lines;
     }
     /**  
-     * @param script
-     * @param out
-     * @throws IOException
+     * @param script    script path name to add to command
+     * @param out       file to write to
+     * @throws IOException  error creating file object
      */
     public static void writeInitialHooksFile(File script, File out) throws IOException {
         List<String> lines = getInitialScriptLines(script);
         FileIO.writeLines(out,  lines);
     }
     /** Add command to 2nd line in List
-     * @param newLine
-     * @param target
+     * @param newLine   line to add
+     * @param target    file to write to
      * @return
      */
     public static List<String> addCommand(String newLine,List<String> target) {
@@ -122,8 +122,8 @@ public class FileIO {
         return target;
     }
     /**
-     * @param lines
-     * @param searchString
+     * @param lines         List of lines
+     * @param searchString  search term
      * @return
      */
     public static boolean doesFileContainLine(List<String> lines, String searchString) {
@@ -136,10 +136,10 @@ public class FileIO {
  
     }
     /**
-     * @param url
-     * @param localFile
-     * @throws MalformedURLException
-     * @throws IOException
+     * @param url           url for download
+     * @param localFile     file to write to
+     * @throws MalformedURLException    error downloading file
+     * @throws IOException              error creating file object
      */
     public static void download(String url, String localFile) throws MalformedURLException, IOException {
         final int timeout = 60000;
@@ -150,9 +150,9 @@ public class FileIO {
                 timeout);
     }
     /** Read named file template found in path.  
-     * @param fileName
-     * @return
-     * @throws IOException
+     * @param fileName      template name to read
+     * @return              List of lines
+     * @throws IOException  error creating file object
      */
     public static List<String> readFileTemplateFromPath(String fileName) throws IOException {
         List<String> lines = new ArrayList<String>();
